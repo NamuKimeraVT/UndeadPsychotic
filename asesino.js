@@ -4,7 +4,6 @@ class Asesino extends Persona {
     // Configuración especial del protagonista
     this.vida = 1;
     this.vision = 500; // Visión ilimitada
-    // console.log("El Asesino fue insertado correctamente", textureData, x, y, juego)
     this.cargarSpritesAnimados(textureData, 15);
     this.cambiarAnimacion("idleAbajo")
     this.container.label = "prota";
@@ -13,6 +12,7 @@ class Asesino extends Persona {
     this.distanciaAlTarget = Infinity;
     juego.targetCamara = this.protagonista;
     this.asignarTarget(this.juego.mouse);
+    console.log("El Asesino fue insertado correctamente", textureData, x, y, juego)
   }
 
   tick() {
