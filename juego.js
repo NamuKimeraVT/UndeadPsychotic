@@ -51,7 +51,6 @@ class Juego {
       if (this.ui) this.ui.resize();
     });
   }
-  //async indica q este metodo es asyncronico, es decir q puede usar "await"
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
     this.pixiApp = new PIXI.Application();
@@ -90,9 +89,6 @@ class Juego {
     this.containerPrincipal.label = "containerPrincipal";
     this.containerPrincipal.zIndex = Z_INDEX.containerPrincipal;
     this.pixiApp.stage.addChild(this.containerPrincipal);
-    // this.crearContainerBG();
-    // this.crearGraficoDebug();
-    // await this.cargarTexturas();
     this.crearFondo();
     this.crearLocal();
     this.crearFuentes();
@@ -235,25 +231,21 @@ class Juego {
       this.mouse.posicion = { x: event.x, y: event.y };
     };
   }
-
   asignarTargets() {
     for (let unaPersona of this.personas) {
       unaPersona.asignarTarget(this.getPersonaRandom());
     }
   }
-
   asignarElMouseComoTargetATodosLosConejitos() {
     for (let unaPersona of this.personas) {
       unaPersona.asignarTarget(this.mouse);
     }
   }
-
   asignarPerseguidorRandomATodos() {
     for (let unaPersona of this.personas) {
       unaPersona.perseguidor = this.getPersonaRandom();
     }
   }
-
   asignarElMouseComoPerseguidorATodosLosConejitos() {
     for (let unaPersona of this.personas) {
       unaPersona.perseguidor = this.mouse;
@@ -265,10 +257,8 @@ class Juego {
     // Ajustar la posición considerando el zoom actual
     let targetX = -this.targetCamara.posicion.x * this.zoom + this.width / 2;
     let targetY = -this.targetCamara.posicion.y * this.zoom + this.height / 2;
-
     const x = (targetX - this.containerPrincipal.x) * 0.1;
     const y = (targetY - this.containerPrincipal.y) * 0.1;
-
     this.moverContainerPrincipalA(
       this.containerPrincipal.x + x,
       this.containerPrincipal.y + y
@@ -284,24 +274,21 @@ class Juego {
     const y = (targetY - this.containerPrincipal.y) * 0.1;
     this.containerPrincipal.x += x;
     this.containerPrincipal.y += y;
-    this.moverContainerPrincipalA(
-      this.containerPrincipal.x + x,
-      this.containerPrincipal.y + y
-    );
+    this.moverContainerPrincipalA(this.containerPrincipal.x + x, this.containerPrincipal.y + y);
     console.log("La camara funciona")
   }
 
   moverContainerPrincipalA(x, y) {
     this.containerPrincipal.x = x;
     this.containerPrincipal.y = y;
-    this.containerBG.x = x;
-    this.containerBG.y = y;
+    //this.containerBG.x = x;
+    //this.containerBG.y = y;
   }
 
   cambiarZoom(zoom) {
     this.zoom = zoom;
     this.containerPrincipal.scale.set(this.zoom);
-    this.containerBG.scale.set(this.zoom);
+    // this.containerBG.scale.set(this.zoom);
   }
 
   calcularFPS() {
@@ -325,19 +312,9 @@ class Juego {
     if (this.graficoDebug) this.graficoDebug.clear();
     for (let unpersona of this.personas) unpersona.tick();
     for (let unpersona of this.personas) unpersona.render();
-    /*for (let arbol of this.arboles) arbol.tick();
-    for (let farol of this.faroles) farol.tick();
-    for (let obstaculo of this.obstaculos) obstaculo.render();
-    // Actualizar el sistema de iluminación
-    if (this.sistemaDeIluminacion) this.sistemaDeIluminacion.tick();
-    if (this.particleSystem) this.particleSystem.update();*/
     if (this.ui) this.ui.tick();
     this.hacerQLaCamaraSigaAlProtagonista();
     this.calcularFPS();
     if (!this.debug) return;
-    // Dibujar las celdas de la grilla
-    // Object.values(this.grilla.celdas).forEach((celda) => celda.dibujar());
-    for (let obstaculo of this.obstaculos) obstaculo.dibujarCirculo();
-    for (let unpersona of this.personas) unpersona.dibujarCirculo();
   }
 }

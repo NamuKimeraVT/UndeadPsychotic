@@ -212,6 +212,15 @@ class Persona extends GameObject {
     }
   }
 
+  quitarmeDeLosArrays() {
+    // console.log("quitarmeDeLosArrays", this.id);
+    this.juego.personas = this.juego.personas.filter((persona) => persona !== this);
+    this.juego.enemigos = this.juego.enemigos.filter((persona) => persona !== this);
+    this.juego.amigos = this.juego.amigos.filter((persona) => persona !== this);
+    this.juego.policias = this.juego.policias.filter((persona) => persona !== this);
+    this.juego.civiles = this.juego.civiles.filter((persona) => persona !== this);
+  }
+
   morir() {
     if (this.muerto) return;
     if (this.animationFSM) this.animationFSM.destroy();
@@ -225,15 +234,6 @@ class Persona extends GameObject {
     // Limpiar la barra de vida DESPUÉS de marcar como muerto
     this.borrarmeComoTargetDeTodos();
     this.quitarmeDeLosArrays();
-  }
-
-  quitarmeDeLosArrays() {
-    // console.log("quitarmeDeLosArrays", this.id);
-    this.juego.personas = this.juego.personas.filter((persona) => persona !== this);
-    this.juego.enemigos = this.juego.enemigos.filter((persona) => persona !== this);
-    this.juego.amigos = this.juego.amigos.filter((persona) => persona !== this);
-    this.juego.policias = this.juego.policias.filter((persona) => persona !== this);
-    this.juego.civiles = this.juego.civiles.filter((persona) => persona !== this);
   }
 
   recibirDanio(danio, deQuien) {
@@ -269,7 +269,6 @@ class Persona extends GameObject {
 
   borrar() {
     this.juego.containerPrincipal.removeChild(this.container);
-    this.quitarBarritaVida();
     this.borrarmeComoTargetDeTodos();
     this.quitarmeDeLosArrays();
     this.container.parent = null;
@@ -282,7 +281,7 @@ class Persona extends GameObject {
   }
 
   render() {
-    /**
+    /*
      * RENDERIZADO CON ORDENAMIENTO EN PROFUNDIDAD
      * 1. Verificaciones de seguridad
      * 2. Sincronización física-visual (super.render())

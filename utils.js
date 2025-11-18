@@ -232,7 +232,6 @@ function generateName() {
     "Sebastian",
     "Jack",
   ];
-
   const spanishFirstNames = [
     "José",
     "Antonio",
@@ -275,7 +274,6 @@ function generateName() {
     "Sara",
     "Jimena",
   ];
-
   const englishSurnames = [
     "Smith",
     "Johnson",
@@ -318,7 +316,6 @@ function generateName() {
     "Adams",
     "Nelson",
   ];
-
   const spanishSurnames = [
     "García",
     "González",
@@ -361,7 +358,6 @@ function generateName() {
     "Sanz",
     "Iglesias",
   ];
-
   const italianSurnames = [
     "Rossi",
     "Ferrari",
@@ -404,7 +400,6 @@ function generateName() {
     "D'Angelo",
     "Marchetti",
   ];
-
   const portugueseSurnames = [
     "Silva",
     "Santos",
@@ -447,7 +442,6 @@ function generateName() {
     "Neves",
     "Rocha",
   ];
-
   // Randomly select from all available names and surnames
   const allFirstNames = [...englishFirstNames, ...spanishFirstNames];
   const allSurnames = [
@@ -456,11 +450,9 @@ function generateName() {
     ...italianSurnames,
     ...portugueseSurnames,
   ];
-
   const firstName =
     allFirstNames[Math.floor(Math.random() * allFirstNames.length)];
   const surname = allSurnames[Math.floor(Math.random() * allSurnames.length)];
-
   return `${firstName} ${surname}`;
 }
 
