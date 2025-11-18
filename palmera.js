@@ -10,10 +10,11 @@ class Palmera extends EntidadEstatica {
 
     async crearSprite() {
         this.sprite = new PIXI.Sprite(await PIXI.Assets.load("assets/palmera.png"));
-        this.sprite.anchor.set(0.5, 0.5);
+        this.sprite.anchor.set(1, 1);
         this.container.addChild(this.sprite);
         this.sprite.scale.x = this.scaleX;
         this.sprite.scale.y = this.scaleY;
+        this.container.zIndex = 1;
         this.render();
         console.log("La palmera se inserto correctamente")
     }

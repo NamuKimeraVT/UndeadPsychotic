@@ -158,8 +158,8 @@ class Juego {
   }
 
   crearPalmera() {
-    const x = 800;
-    const y = 600;
+    const x = 900;
+    const y = 700;
     const local = new Palmera(x, y, this, 0.5, 0.5);
     this.objetosInanimados.push(local);
   }
@@ -174,13 +174,13 @@ class Juego {
   crearSillas() {
     const x = 560;
     const y = 600;
-    const silla = new Silla(x, y, this, 0.7, 0.7);
+    const silla = new Silla(x, y, this, 0.5, 0.5);
     this.objetosInanimados.push(silla);
   }
 
   async crearAsesino() {
-    const x = 0.5 * this.width;
-    const y = 0.5 * this.height;
+    const x = 900;
+    const y = 290;
     const animacionesProtagonista = await PIXI.Assets.load("assets/personajes/img/asesino.json");
     const protagonista = new Asesino(animacionesProtagonista, x, y, this);
     this.personas.push(protagonista);

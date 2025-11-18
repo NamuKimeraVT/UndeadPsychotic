@@ -48,15 +48,15 @@ class Persona extends GameObject {
   }
 
   meEstoyChocandoContraLaParedIzquierda() {
-    return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 509, 295, 100, 950)
+    return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 510, 295, 100, 950)
   }
 
   meEstoyChocandoContraLaParedDerecha() {
-    return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 1409, 295, 1800, 950)
+    return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 1410, 295, 1800, 950)
   }
 
   meEstoyChocandoContraLaParedArriba() {
-    return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 509, 295, 1409, 295)
+    return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 510, 295, 1410, 295)
   }
 
   meEstoyChocandoContraLaParedAbajo() {

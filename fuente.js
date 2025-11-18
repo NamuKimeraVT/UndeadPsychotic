@@ -2,7 +2,6 @@ class Fuente extends EntidadEstatica {
     constructor(x, y, juego, scaleX, scaleY) {
         super(x, y, juego);
         this.radio = 10;
-        this.tipo = Math.floor(Math.random()) + 1;
         this.scaleX = scaleX || 1;
         this.scaleY = scaleY || 1;
         this.container.label = "Fuente";
@@ -15,6 +14,8 @@ class Fuente extends EntidadEstatica {
         this.container.addChild(this.sprite);
         this.sprite.scale.x = this.scaleX;
         this.sprite.scale.y = this.scaleY;
+        this.container.zIndex = 1;
         this.render();
+        console.log("La fuente se inserto correctamente")
     }
 }
