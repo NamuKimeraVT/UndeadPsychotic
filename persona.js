@@ -39,19 +39,15 @@ class Persona extends GameObject {
   meEstoyChocandoContraLaParedIzquierda() {
     return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 510, 450, 100, 1080)
   }
-
   meEstoyChocandoContraLaParedDerecha() {
     return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 1400, 450, 1900, 1080)
   }
-
   meEstoyChocandoContraLaParedArriba() {
     return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 510, 450, 1410, 450)
   }
-
   meEstoyChocandoContraLaParedAbajo() {
     return intersectaLineaCirculo(this.posicion.x, this.posicion.y, 50, 1830, 1080, 2160, 1080)
   }
-
   meEstoyChocandoConAlgunaPared() {
     return this.meEstoyChocandoContraLaParedIzquierda() || this.meEstoyChocandoContraLaParedDerecha() || this.meEstoyChocandoContraLaParedAbajo() || this.meEstoyChocandoContraLaParedArriba()
   }
@@ -62,28 +58,24 @@ class Persona extends GameObject {
       // console.log(this.nombre, "choco con pared izquierda")
     }
   }
-
   noChocarConLaParedDerecha() {
     if (this.meEstoyChocandoContraLaParedDerecha()) {
       this.velocidad.y = 100
       // console.log(this.nombre, "choco con pared derecha")
     }
   }
-
   noChocarConLaParedArriba() {
     if (this.meEstoyChocandoContraLaParedArriba()) {
       this.velocidad.y = 100
       // console.log(this.nombre, "choco con pared arriba")
     }
   }
-
   noChocarConLaParedAbajo() {
     if (this.meEstoyChocandoContraLaParedAbajo()) {
       this.velocidad.y = -100
       // console.log(this.nombre, "choco con pared abajo")
     }
   }
-
   noChocarConNingunaPared() {
     this.noChocarConLaParedIzquierda()
     this.noChocarConLaParedDerecha()
@@ -201,31 +193,6 @@ class Persona extends GameObject {
      */
     this.angulo = radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
     this.velocidadLineal = calcularDistancia(this.velocidad, { x: 0, y: 0 });
-  }
-
-  alineacion() {
-    let cont = 0;
-    let vectorPromedioDeVelocidades = { x: 0, y: 0 };
-    for (const persona of this.amigosCerca) {
-      if (persona !== this) {
-        const distancia = calcularDistancia(this.posicion, persona.posicion);
-        if (distancia < this.vision) {
-          cont++;
-          vectorPromedioDeVelocidades.x += persona.velocidad.x;
-          vectorPromedioDeVelocidades.y += persona.velocidad.y;
-        }
-      }
-    }
-    if (cont == 0) return;
-    vectorPromedioDeVelocidades.x /= cont;
-    vectorPromedioDeVelocidades.y /= cont;
-    let vectorNuevo = {
-      x: vectorPromedioDeVelocidades.x - this.velocidad.x,
-      y: vectorPromedioDeVelocidades.y - this.velocidad.y,
-    };
-    vectorNuevo = limitarVector(vectorNuevo, 1);
-    this.aceleracion.x += this.factorAlineacion * vectorNuevo.x;
-    this.aceleracion.y += this.factorAlineacion * vectorNuevo.y;
   }
 
   verificarSiEstoyMuerto() {

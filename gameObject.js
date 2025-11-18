@@ -34,7 +34,6 @@ class GameObject {
     //y despues hacemos visible el q queremos
     this.spritesAnimados[cual].visible = true;
   }
-
   cargarSpritesAnimados(textureData, escala) {
     for (let key of Object.keys(textureData.animations)) {
       this.spritesAnimados[key] = new PIXI.AnimatedSprite(textureData.animations[key]);
@@ -44,6 +43,28 @@ class GameObject {
       this.spritesAnimados[key].scale.set(escala);
       this.spritesAnimados[key].anchor.set(1, 1);
       this.container.addChild(this.spritesAnimados[key]);
+    }
+  }
+  cambiarDeSpriteAnimadoSegunAngulo() {
+    //0 grados es a la izq, abre en sentido horario, por lo cual 180 es a la derecha
+    //90 es para arriba
+    //270 abajo
+    if ((this.angulo > 315 && this.angulo < 360) || this.angulo < 45) {
+      this.cambiarAnimacion("caminarDerecha");
+      this.spritesAnimados.caminarDerecha.scale.x = -15;
+    } else if (this.angulo > 135 && this.angulo < 225) {
+      this.cambiarAnimacion("caminarDerecha");
+      this.spritesAnimados.caminarDerecha.scale.x = 15;
+    } else if (this.angulo < 135 && this.angulo > 45) {
+      this.cambiarAnimacion("caminarArriba");
+    } else {
+      this.cambiarAnimacion("caminarAbajo");
+    }
+  }
+  cambiarVelocidadDeAnimacionSegunVelocidadLineal() {
+    const keys = Object.keys(this.spritesAnimados);
+    for (let key of keys) {
+      this.spritesAnimados[key].animationSpeed = this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
     }
   }
 
@@ -114,38 +135,6 @@ class GameObject {
     this.aceleracion.y += this.factorCohesion * vectorNuevo.y;
   }
   */
- 
-  cambiarDeSpriteAnimadoSegunAngulo() {
-    //0 grados es a la izq, abre en sentido horario, por lo cual 180 es a la derecha
-    //90 es para arriba
-    //270 abajo
-    if ((this.angulo > 315 && this.angulo < 360) || this.angulo < 45) {
-      this.cambiarAnimacion("caminarDerecha");
-      this.spritesAnimados.caminarDerecha.scale.x = -15;
-    } else if (this.angulo > 135 && this.angulo < 225) {
-      this.cambiarAnimacion("caminarDerecha");
-      this.spritesAnimados.caminarDerecha.scale.x = 15;
-    } else if (this.angulo < 135 && this.angulo > 45) {
-      this.cambiarAnimacion("caminarArriba");
-    } else {
-      this.cambiarAnimacion("caminarAbajo");
-    }
-  }
-
-  limitarAceleracion() {
-    this.aceleracion = limitarVector(this.aceleracion, this.aceleracionMaxima);
-  }
-
-  limitarVelocidad() {
-    this.velocidad = limitarVector(this.velocidad, this.velocidadMaxima);
-  }
-
-  aplicarFriccion() {
-    const friccion = Math.pow(0.95, this.juego.pixiApp.ticker.deltaTime);
-    this.velocidad.x *= friccion;
-    this.velocidad.y *= friccion;
-  }
-
   rebotar() {
     //ejemplo mas realista
     if (this.posicion.x > this.juego.width || this.posicion.x < 0) {
@@ -159,18 +148,6 @@ class GameObject {
       this.velocidad.y *= -0.99;
     }
   }
-
-  asignarTarget(quien) {
-    this.target = quien;
-  }
-
-  cambiarVelocidadDeAnimacionSegunVelocidadLineal() {
-    const keys = Object.keys(this.spritesAnimados);
-    for (let key of keys) {
-      this.spritesAnimados[key].animationSpeed = this.velocidadLineal * 0.05 * this.juego.pixiApp.ticker.deltaTime;
-    }
-  }
-
   perseguir() {
     if (!this.target) return;
     const dist = calcularDistancia(this.posicion, this.target.posicion);
@@ -203,6 +180,45 @@ class GameObject {
     this.aceleracion.y += -vectorTemporal.y;
   }
 
+  alineacion() {
+    let cont = 0;
+    let vectorPromedioDeVelocidades = { x: 0, y: 0 };
+    for (const persona of this.amigosCerca) {
+      if (persona !== this) {
+        const distancia = calcularDistancia(this.posicion, persona.posicion);
+        if (distancia < this.vision) {
+          cont++;
+          vectorPromedioDeVelocidades.x += persona.velocidad.x;
+          vectorPromedioDeVelocidades.y += persona.velocidad.y;
+        }
+      }
+    }
+    if (cont == 0) return;
+    vectorPromedioDeVelocidades.x /= cont;
+    vectorPromedioDeVelocidades.y /= cont;
+    let vectorNuevo = {
+      x: vectorPromedioDeVelocidades.x - this.velocidad.x,
+      y: vectorPromedioDeVelocidades.y - this.velocidad.y,
+    };
+    vectorNuevo = limitarVector(vectorNuevo, 1);
+    this.aceleracion.x += this.factorAlineacion * vectorNuevo.x;
+    this.aceleracion.y += this.factorAlineacion * vectorNuevo.y;
+  }
+
+  limitarAceleracion() {
+    this.aceleracion = limitarVector(this.aceleracion, this.aceleracionMaxima);
+  }
+  limitarVelocidad() {
+    this.velocidad = limitarVector(this.velocidad, this.velocidadMaxima);
+  }
+  aplicarFriccion() {
+    const friccion = Math.pow(0.95, this.juego.pixiApp.ticker.deltaTime);
+    this.velocidad.x *= friccion;
+    this.velocidad.y *= friccion;
+  }
+  asignarTarget(quien) {
+    this.target = quien;
+  }
   asignarVelocidad(x, y) {
     this.velocidad.x = x;
     this.velocidad.y = y;

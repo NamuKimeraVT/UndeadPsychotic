@@ -35,7 +35,6 @@ class Juego {
     this.maxZoom = 2;
     this.zoomStep = 0.1;
     this.initPIXI();
-    this.initMatterJS();
     this.setupResizeHandler();
   }
 
@@ -52,83 +51,6 @@ class Juego {
       if (this.ui) this.ui.resize();
     });
   }
-
-  initMatterJS() {
-    // module aliases
-    var Engine = Matter.Engine,
-      Render = Matter.Render,
-      Runner = Matter.Runner,
-      Bodies = Matter.Bodies,
-      Composite = Matter.Composite;
-
-    // create an engine
-    this.engine = Engine.create();
-
-    // create a renderer
-    // this.matterRenderer = Render.create({
-    //   element: document.body,
-    //   engine: this.engine,
-    // });
-
-    // create two boxes and a ground
-    // var boxA = Bodies.rectangle(400, 200, 80, 80);
-    // var boxB = Bodies.rectangle(450, 50, 80, 80);
-
-    // Crear bordes de la pantalla
-    this.piso = Bodies.rectangle(
-      this.width / 2,
-      this.height + 30,
-      this.width,
-      60,
-      {
-        isStatic: true,
-        friction: 1,
-      }
-    );
-
-    this.techo = Bodies.rectangle(this.width / 2, -30, this.width, 60, {
-      isStatic: true,
-      friction: 1,
-    });
-
-    this.paredIzquierda = Bodies.rectangle(
-      -30,
-      this.height / 2,
-      60,
-      this.height,
-      {
-        isStatic: true,
-        friction: 1,
-      }
-    );
-
-    this.paredDerecha = Bodies.rectangle(
-      this.width + 30,
-      this.height / 2,
-      60,
-      this.height,
-      {
-        isStatic: true,
-        friction: 1,
-      }
-    );
-
-    // add all of the bodies to the world
-    Composite.add(this.engine.world, [
-      this.piso,
-      this.techo,
-      this.paredIzquierda,
-      this.paredDerecha,
-    ]);
-
-    // run the renderer
-    if (this.matterRenderer) Render.run(this.matterRenderer);
-    // create runner
-    this.matterRunner = Runner.create();
-    // run the engine
-    Runner.run(this.matterRunner, this.engine);
-  }
-
   //async indica q este metodo es asyncronico, es decir q puede usar "await"
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
