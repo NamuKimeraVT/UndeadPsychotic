@@ -44,7 +44,7 @@ function crearSpriteNegro(anchoDelMapa, altoDelMapa) {
 
     // Crear textura PIXI a partir del canvas y guardarla en cache
     textura = PIXI.Texture.from(canvas);
-    texturaNegrCache.set(cacheKey, textura);
+    texturaNegraCache.set(cacheKey, textura);
   }
 
   // Crear sprite usando la textura (reutilizada o nueva)

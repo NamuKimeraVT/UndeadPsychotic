@@ -3,14 +3,13 @@ class Local extends EntidadEstatica {
         super(x, y, juego);
         this.radio = 10;
         this.scaleX = scaleX || 1;
-        this.container.label = "local" + this.id;
+        this.container.label = "local";
         this.crearSprite();
     }
 
     async crearSprite() {
         this.sprite = new PIXI.Sprite(await PIXI.Assets.load("assets/locales.png"));
         this.sprite.anchor.set(0.5, 1);
-
         this.container.addChild(this.sprite);
         this.sprite.scale.x = this.scaleX;
         this.render();

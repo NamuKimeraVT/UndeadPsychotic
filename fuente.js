@@ -12,7 +12,6 @@ class Fuente extends EntidadEstatica {
     async crearSprite() {
         this.sprite = new PIXI.Sprite(await PIXI.Assets.load("assets/fuente.png"));
         this.sprite.anchor.set(1, 1);
-
         this.container.addChild(this.sprite);
         this.sprite.scale.x = this.scaleX;
         this.sprite.scale.y = this.scaleY;

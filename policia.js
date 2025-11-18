@@ -1,7 +1,6 @@
 class Policia extends Persona {
   constructor(textureData, x, y, juego) {
     super(x, y, juego);
-    this.bando = "policia";
     // console.log("La Ley fue insertada correctamente", textureData, x, y, juego)
     this.cargarSpritesAnimados(textureData, 15);
     this.cambiarAnimacion("idleAbajo")

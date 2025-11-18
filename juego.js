@@ -60,8 +60,8 @@ class Juego {
     this.crearSillas();
     this.crearPalmera();
     this.crearAsesino();
-    this.crearCiudadanos(50);
-    this.crearPolicias(20);
+    this.crearCiudadanos(40);
+    this.crearPolicias(10);
   }
 
   async crearFondo() {

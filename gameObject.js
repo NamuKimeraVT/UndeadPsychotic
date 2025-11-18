@@ -33,20 +33,6 @@ class GameObject {
     // this.sprite.animationSpeed = 0.1;
     // this.sprite.scale.set(2);
 
-    // //le asigno x e y al sprite
-    // this.sprite.x = x;
-    // this.sprite.y = y;
-
-    // //establezco el punto de pivot en el medio:
-    // this.sprite.anchor.set(0.5);
-
-    // //agrego el sprite al stage
-    // //this.juego es una referencia a la instancia de la clase Juego
-    // //a su vez el juego tiene una propiedad llamada pixiApp, q es la app de PIXI misma,
-    // //q a su vez tiene el stage. Y es el Stage de pixi q tiene un metodo para agregar 'hijos'
-    // //(el stage es como un container/nodo)
-    // this.juego.pixiApp.stage.addChild(this.sprite);
-
     this.juego.containerPrincipal.addChild(this.container);
   }
 
@@ -214,7 +200,6 @@ class GameObject {
     //TODO: hablar de deltatime
 
     this.separacion();
-
     this.escapar();
     this.perseguir();
     this.limitarAceleracion();
@@ -232,7 +217,6 @@ class GameObject {
 
     //guardamos el angulo
     this.angulo = radianesAGrados(Math.atan2(this.velocidad.y, this.velocidad.x)) + 180;
-
     this.velocidadLineal = Math.sqrt(this.velocidad.x * this.velocidad.x + this.velocidad.y * this.velocidad.y);
   }
 
