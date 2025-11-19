@@ -476,42 +476,29 @@ function calcularAngulo(p1, p2) {
   return deg;
 }
 
-function createFSM(initialState, states) {
+function createFSM(initialState, transitions) {
   let currentState = initialState;
-  return {
-    getCurrentState() {
-      return currentState;
-    },
-    transition(event) {
-      const stateDefinition = states[currentState];
-      if (!stateDefinition) {
-        console.error(`State '${currentState}' is not defined.`);
-        return;
+  function dispatch(event) {
+    const transition = transitions[currentState] && transitions[currentState][event];
+
+    if (transition) {
+      currentState = transition.target;
+      if (transition.action) {
+        transition.action();
       }
-      const nextState = stateDefinition.transitions[event];
-      if (nextState) {
-        console.log(`Transitioning from '${currentState}' to '${nextState}' via event '${event}'`);
-        currentState = nextState;
-        if (states[currentState] && typeof states[currentState].onEnter === 'function') {
-          states[currentState].onEnter(); // Execute onEnter callback for the new state
-        }
-      } else {
-        console.warn(`Invalid transition: Event '${event}' not allowed from state '${currentState}'.`);
-      }
-    },
-    send(event, payload) {
-      const stateDefinition = states[currentState];
-      if (!stateDefinition) {
-        console.error(`State '${currentState}' is not defined.`);
-        return;
-      }
-      const action = stateDefinition.actions && stateDefinition.actions[event];
-      if (typeof action === 'function') {
-        console.log(`Executing action for event '${event}' in state '${currentState}'.`);
-        action(payload); // Execute action with payload
-      } else {
-        console.warn(`No action defined for event '${event}' in state '${currentState}'.`);
-      }
+      return true; // Transición exitosa
+    } else {
+      console.warn(`Evento inválido "${event}" en el estado "${currentState}"`);
+      return false; // No hubo transición
     }
+  }
+
+  function getCurrentState() {
+    return currentState;
+  }
+
+  return {
+    dispatch,
+    getCurrentState,
   };
 }

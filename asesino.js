@@ -1,25 +1,24 @@
 class Asesino extends Persona {
-  keysPressed = [];
   constructor(textureData, x, y, juego) {
     super(x, y, juego);
+    this.keysPressed = [];
     // Configuración especial del protagonista
     this.vida = 10;
-    this.vision = 500; // Visión ilimitada
+    this.vision = 100; // Visión ilimitada
     this.cargarSpritesAnimados(textureData, 15);
     this.cambiarAnimacion("idleAbajo")
     this.container.label = "prota";
     this.factorIrAlTarget = 0.5;
     this.distanciaAlTarget = Infinity;
     juego.targetCamara = this.protagonista;
-    this.asignarTarget(this.juego.mouse);
+    // this.asignarTarget(this.juego.mouse);
     this.registerEventListeners()
-    this.assassinFSM = createFSM('idle', this.transiciones);
-    this.transiciones = {
+    this.assassinFSM = createFSM('idle', {
       'idle': {
-        'moveUp': { target: 'movingUp', action: () => console.log('Asesino moviéndose hacia arriba') },
-        'moveDown': { target: 'movingDown', action: () => console.log('Asesino moviéndose hacia abajo') },
-        'moveLeft': { target: 'movingLeft', action: () => console.log('Asesino moviéndose hacia la izquierda') },
-        'moveRight': { target: 'movingRight', action: () => console.log('Asesino moviéndose hacia la derecha') },
+        'moveUp': { target: 'movingUp', action: () => { this.cambiarAnimacion("caminarArriba") } },
+        'moveDown': { target: 'movingDown', action: () => { this.cambiarAnimacion("caminarAbajo") } },
+        'moveLeft': { target: 'movingLeft', action: () => { this.cambiarAnimacion("caminarDerecha") } },
+        'moveRight': { target: 'movingRight', action: () => { this.cambiarAnimacion("caminarDerecha") } },
         'shoot': { target: 'shooting', action: () => console.log('Asesino disparando (desde idle)') }
       },
       'movingUp': {
@@ -53,35 +52,85 @@ class Asesino extends Persona {
       'shooting': {
         'stopShooting': { target: 'idle', action: () => console.log('Asesino deja de disparar') }
       }
-    }
-    
-    // console.log("El Asesino fue insertado correctamente", textureData, x, y, juego)
+    });
+    console.log("El Asesino fue insertado correctamente", textureData, x, y, juego)
   }
 
   registerEventListeners() {
-    document.addEventListener('keydown', (event) => {
-      this.keysPressed[event.key] = true;
-    });
-    document.addEventListener('keyup', (event) => {
-      this.keysPressed[event.key] = false;
-    });
+    document.addEventListener('keydown', (event) => { this.keysPressed[event.key] = true; });
+    document.addEventListener('keyup', (event) => { this.keysPressed[event.key] = false; });
   }
 
   updateMovement() {
-    if (keysPressed['ArrowUp'] || keysPressed['w']) {
-      assassinFSM.dispatch('moveUp'); // Cambia el estado a 'moving'
-      this.move('up'); // Mueve al asesino hacia arriba
-    } else if (keysPressed['ArrowDown'] || keysPressed['s']) {
-      assassinFSM.dispatch('moveDown');
-      this.move('down');
-    } else if (keysPressed['ArrowLeft'] || keysPressed['a']) {
-      assassinFSM.dispatch('moveLeft');
-      this.move('left');
-    } else if (keysPressed['ArrowRight'] || keysPressed['d']) {
-      assassinFSM.dispatch('moveRight');
-      this.move('right');
+    let direction = '';
+    if (this.keysPressed['ArrowUp'] || this.keysPressed['w']) {
+      direction = 'up';
+      this.cambiarAnimacion("caminarArriba");
+      console.log('Asesino moviéndose hacia arriba');
+      console.log("El movimiento arriba se actualizo");
+    } else if (this.keysPressed['ArrowDown'] || this.keysPressed['s']) {
+      direction = 'down';
+      this.cambiarAnimacion("caminarAbajo");
+      console.log('Asesino moviéndose hacia abajo')
+      console.log("El movimiento abajo se actualizo")
+    } else if (this.keysPressed['ArrowLeft'] || this.keysPressed['a']) {
+      direction = 'left';
+      this.cambiarAnimacion("caminarDerecha");
+      console.log('Asesino moviéndose hacia la izquierda')
+      console.log("El movimiento izquierda se actualizo")
+    } else if (this.keysPressed['ArrowRight'] || this.keysPressed['d']) {
+      direction = 'right';
+      this.cambiarAnimacion("caminarDerecha");
+      console.log('Asesino moviéndose hacia la derecha')
+      console.log("El movimiento derecha se actualizo")
+    }
+    if (direction) {
+      this.move(direction);
+      // Actualiza el estado de la FSM
+      if (direction === 'up') {
+        this.assassinFSM.dispatch('moveUp');
+      } else if (direction === 'down') {
+        this.assassinFSM.dispatch('moveDown');
+      } else if (direction === 'left') {
+        this.assassinFSM.dispatch('moveLeft');
+      } else if (direction === 'right') {
+        this.assassinFSM.dispatch('moveRight');
+      }
     } else {
-      assassinFSM.dispatch('stop'); // Detiene el movimiento
+      // Si no se presiona ninguna tecla, se detiene
+      this.stop();
+      this.assassinFSM.dispatch('stop'); // Cambia el estado a 'idle'
+    }
+  }
+  // Método para detener el movimiento
+  stop() {
+    Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
+  }
+
+  setAssassinDirection(direction) {
+    // Actualizar la dirección interna del asesino
+    assassinFSM.dispatch(`move${direction.charAt(0).toUpperCase() + direction.slice(1)}`); // Ej: moveUp, moveDown, etc.
+    // Aplicar velocidad correspondiente en Matter.js
+    const speed = 5; // Ajusta la velocidad según sea necesario
+    switch (direction) {
+      case 'up':
+        assassinBody.velocity.y = -speed; // Mover hacia arriba
+        break;
+      case 'down':
+        assassinBody.velocity.y = speed; // Mover hacia abajo
+        break;
+      case 'left':
+        assassinBody.velocity.x = -speed; // Mover hacia la izquierda
+        break;
+      case 'right':
+        assassinBody.velocity.x = speed; // Mover hacia la derecha
+        break;
+      default:
+        console.warn('Dirección inválida:', direction);
+    }
+    // Cambiar animación del sprite
+    if (assassinSprite) {
+      assassinSprite.gotoAndPlay(`walk${direction.charAt(0).toUpperCase() + direction.slice(1)}`); // Cambia la animación del sprite
     }
   }
 
@@ -121,7 +170,7 @@ class Asesino extends Persona {
   tick() {
     super.tick()
     this.noChocarConNingunaPared()
-    // this.updateMovement(); // Actualiza el movimiento y la FSM
+    this.updateMovement(); // Actualiza el movimiento y la FSM
     // ... (resto del código de renderizado y actualización del motor)
     //Matter.Engine.update(engine);
   }

@@ -1,5 +1,5 @@
 class Persona extends GameObject {
-  spritesAnimados = {}
+  spritesAnimados = {};
   keysPressed = {};
   constructor(x, y, juego) {
     super(x, y, juego);
