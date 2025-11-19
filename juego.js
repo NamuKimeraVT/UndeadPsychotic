@@ -13,6 +13,7 @@ class Juego {
   ciudadanos = [];
   policias = [];
   objetosInanimados = [];
+  paredes = [];
   protagonista;
   width;
   height;
@@ -90,6 +91,7 @@ class Juego {
     this.containerPrincipal.zIndex = Z_INDEX.containerPrincipal;
     this.pixiApp.stage.addChild(this.containerPrincipal);
     this.crearFondo();
+    this.crearParedes();
     this.crearLocal();
     this.crearFuentes();
     this.crearSillas();
@@ -98,10 +100,6 @@ class Juego {
     this.targetCamara = this.protagonista;
     this.crearCiudadanos(20);
     this.crearPolicias(10);
-    // this.crearCruzTarget();
-    // Crear el sistema de iluminación
-    // this.sistemaDeIluminacion = new SistemaDeIluminacion(this);
-    // this.particleSystem = new ParticleSystem(this);
   }
 
   async crearFondo() {
@@ -111,6 +109,25 @@ class Juego {
     this.fondo.width = this.anchoDelMapa;
     this.fondo.height = this.altoDelMapa;
     this.containerPrincipal.addChild(this.fondo);
+  }
+
+  crearParedes(){
+    const x1 = 0;
+    const y1 = 0;
+    const x2 = 3800;
+    const y2 = 2120;
+    const paredIzquierda = new Pared(this, x1, y1, x1, y2)
+    const paredDerecha = new Pared(this, x2, y1, x2, y2)
+    const paredArriba = new Pared(this, x1, y1, x2, 0)
+    const paredAbajo = new Pared(this, x1, y2, x2, y2)
+    this.paredes.push(paredIzquierda);
+    this.paredes.push(paredDerecha);
+    this.paredes.push(paredArriba);
+    this.paredes.push(paredAbajo);
+  }
+
+  crearParedesDeLosLocales(){
+
   }
 
   crearLocal() {

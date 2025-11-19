@@ -5,7 +5,6 @@ class Local extends EntidadEstatica {
         this.scaleX = scaleX || 1;
         this.container.label = "local";
         this.crearSprite();
-        // this.pared1 = new Pared(juego, this.posicion.x, this.posicion.y, 50, 510, 450, 100, 1080)
     }
 
     async crearSprite() {

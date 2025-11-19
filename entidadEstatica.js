@@ -3,7 +3,6 @@ class EntidadEstatica extends GameObject {
     super(x, y, juego);
     this.radio = 20;
     this.sprite = null;
-
     this.render();
   }
   

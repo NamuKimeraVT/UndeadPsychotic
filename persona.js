@@ -241,32 +241,6 @@ class Persona extends GameObject {
     this.juego.particleSystem.hacerQueLeSalgaSangreAAlguien(this, deQuien);
   }
 
-  caminarSinRumbo() {
-    console.log("1")
-    if (!this.container || !this.sprite) return;
-    if (!this.targetRandom) {
-      this.targetRandom = {
-        posicion: {
-          x: this.juego.anchoDelMapa * Math.random(),
-          y: this.juego.altoDelMapa * Math.random(),
-        },
-      };
-    }
-    if (calcularDistancia(this.posicion, this.targetRandom.posicion) < this.distanciaParaLlegarALTarget) {
-      this.targetRandom = null;
-    }
-    if (!this.targetRandom) return;
-    if (isNaN(this.targetRandom.posicion.x) || isNaN(this.targetRandom.posicion.y))
-    debugger;
-    // Vector de dirección hacia el objetivo
-    const difX = this.targetRandom.posicion.x - this.posicion.x;
-    const difY = this.targetRandom.posicion.y - this.posicion.y;
-    const vectorNuevo = limitarVector({ x: difX, y: difY }, 1);
-    // Aplicar fuerza de persecución escalada por el factor específico del objeto
-    this.aceleracion.x += vectorNuevo.x * this.factorPerseguir;
-    this.aceleracion.y += vectorNuevo.y * this.factorPerseguir;
-  }
-
   borrar() {
     this.juego.containerPrincipal.removeChild(this.container);
     this.borrarmeComoTargetDeTodos();

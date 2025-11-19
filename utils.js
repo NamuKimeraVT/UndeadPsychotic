@@ -10,7 +10,6 @@ function calcularDistancia(obj1, obj2) {
 
 function limitarVector(vector, magnitudMaxima = 1) {
   const magnitudActual = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-
   if (magnitudActual > magnitudMaxima) {
     const escala = magnitudMaxima / magnitudActual;
     return {
@@ -18,53 +17,43 @@ function limitarVector(vector, magnitudMaxima = 1) {
       y: vector.y * escala,
     };
   }
-
   // Si ya está dentro del límite, se devuelve igual
   return { ...vector };
 }
 
 // Cache para texturas negras para evitar recrearlas
 const texturaNegraCache = new Map();
-
 function crearSpriteNegro(anchoDelMapa, altoDelMapa) {
   // Verificar si ya tenemos esta textura en cache
   const cacheKey = `negro_${anchoDelMapa}x${altoDelMapa}`;
   let textura = texturaNegraCache.get(cacheKey);
-
   if (!textura) {
     // Crear un canvas negro del tamaño del mapa solo si no existe en cache
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = anchoDelMapa;
     canvas.height = altoDelMapa;
-
     // Llenar todo el canvas de negro
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     // Crear textura PIXI a partir del canvas y guardarla en cache
     textura = PIXI.Texture.from(canvas);
     texturaNegraCache.set(cacheKey, textura);
   }
-
   // Crear sprite usando la textura (reutilizada o nueva)
   const sprite = new PIXI.Sprite(textura);
-
   // Posicionar el sprite en el origen del mapa
   sprite.x = 0;
   sprite.y = 0;
-
   return sprite;
 }
 
 // Cache para texturas de gradientes para evitar recrearlas
 const texturaGradienteCache = new Map();
-
 function crearSpriteConGradiente(radio = 300, color = 0xffffff) {
   // Verificar si ya tenemos esta textura en cache
   const cacheKey = `gradiente_${radio}_${color}`;
   let textura = texturaGradienteCache.get(cacheKey);
-
   if (!textura) {
     // Crear un canvas para el gradiente individual solo si no existe en cache
     const canvas = document.createElement("canvas");
@@ -72,7 +61,6 @@ function crearSpriteConGradiente(radio = 300, color = 0xffffff) {
     const size = radio * 2;
     canvas.width = size;
     canvas.height = size;
-
     // Crear gradiente radial centrado
     const gradient = ctx.createRadialGradient(
       radio,
@@ -82,11 +70,9 @@ function crearSpriteConGradiente(radio = 300, color = 0xffffff) {
       radio,
       radio // círculo exterior
     );
-
     const r = (color >> 16) & 255;
     const g = (color >> 8) & 255;
     const b = color & 255;
-
     const cantStops = 10;
     for (let i = 1; i <= cantStops; i++) {
       const value = 2 ** (1 - i);
@@ -96,40 +82,32 @@ function crearSpriteConGradiente(radio = 300, color = 0xffffff) {
       ); // Centro blanco (sin oscuridad)
     }
     // Configurar paradas del gradiente
-
     // Llenar todo el canvas de negro primero
     ctx.fillStyle = "transparent";
     ctx.fillRect(0, 0, size, size);
-
     // Dibujar el círculo con gradiente
     ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.arc(radio, radio, radio, 0, Math.PI * 2);
     ctx.fill();
-
     // Crear textura PIXI a partir del canvas y guardarla en cache
     textura = PIXI.Texture.from(canvas);
     texturaGradienteCache.set(cacheKey, textura);
   }
-
   // Crear sprite usando la textura (reutilizada o nueva)
   const sprite = new PIXI.Sprite(textura);
-
   // Centrar el anchor para que el gradiente se centre en la posición del farol
   sprite.anchor.set(0.5, 0.5);
   sprite.scale.y = 0.5;
-
   return sprite;
 }
 
 // Cache para texturas de círculos para evitar recrearlas
 const texturaCirculoCache = new Map();
-
 function crearCirculo(radio, color) {
   // Verificar si ya tenemos esta textura en cache
   const cacheKey = `circulo_${radio}_${color}`;
   let textura = texturaCirculoCache.get(cacheKey);
-
   if (!textura) {
     // Crear un canvas para el círculo solo si no existe en cache
     const canvas = document.createElement("canvas");
@@ -137,22 +115,18 @@ function crearCirculo(radio, color) {
     const size = radio * 2;
     canvas.width = size;
     canvas.height = size;
-
     // Llenar el canvas de transparente
     ctx.fillStyle = "transparent";
     ctx.fillRect(0, 0, size, size);
-
     // Dibujar el círculo con el color especificado
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(radio, radio, radio, 0, Math.PI * 2);
     ctx.fill();
-
     // Crear textura PIXI a partir del canvas y guardarla en cache
     textura = PIXI.Texture.from(canvas);
     texturaCirculoCache.set(cacheKey, textura);
   }
-
   return textura;
 }
 
@@ -458,7 +432,6 @@ function generateName() {
 
 /**
  * Determina si una línea intersecta un círculo.
- *
  * @param {number} cx Coordenada x del centro del círculo.
  * @param {number} cy Coordenada y del centro del círculo.
  * @param {number} r Radio del círculo.
@@ -475,24 +448,30 @@ function intersectaLineaCirculo(cx, cy, r, x1, y1, x2, y2) {
   const a = dx * dx + dy * dy;
   const b = 2 * (dx * (x1 - cx) + dy * (y1 - cy));
   const c = (x1 - cx) * (x1 - cx) + (y1 - cy) * (y1 - cy) - r * r;
-
   // Calcula el discriminante.
   const discriminante = b * b - 4 * a * c;
-
   // Si el discriminante es negativo, no hay intersección.
   if (discriminante < 0) {
     return false;
   }
-
   // Calcula los puntos de intersección (si existen).
   const t1 = (-b + Math.sqrt(discriminante)) / (2 * a);
   const t2 = (-b - Math.sqrt(discriminante)) / (2 * a);
-
   // Verifica si alguno de los puntos de intersección está en la línea.
   if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1)) {
     return true;
   }
-
   // No hay intersección.
   return false;
+}
+
+function calcularAngulo(p1, p2) {
+  // Diferencia de coordenadas (vector de dirección)
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  // Calcula el ángulo en radianes usando atan2
+  const rad = Math.atan2(dy, dx);
+  // Convierte a grados (si es necesario)
+  const deg = rad * (180 / Math.PI);
+  return deg;
 }
