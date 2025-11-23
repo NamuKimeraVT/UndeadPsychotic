@@ -14,18 +14,6 @@ class Persona extends GameObject {
     this.fuerzaDeAtaque = 0.05 + Math.random() * 0.05;
     this.radio = 7 + Math.random() * 3;
     this.rangoDeAtaque = this.radio * 3;
-    this.body = null; // Cuerpo de Matter.js (inicialmente nulo)
-    this.options = {};
-    this.crearCuerpo();
-  }
-
-  crearCuerpo() {
-    this.body = Matter.Bodies.rectangle(this.x, this.y, 9, 25, {
-      isStatic: false, // Las personas no son estáticas
-      restitution: 0.5, // Rebote
-      friction: 0.5, // Fricción
-      ...this.options
-    });
   }
 
   // Método para mover la persona

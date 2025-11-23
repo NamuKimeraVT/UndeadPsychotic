@@ -27,18 +27,6 @@ class GameObject {
     this.juego.containerPrincipal.addChild(this.container);
   }
 
-  // Método para crear el cuerpo de Matter.js (puede ser sobreescrito por las subclases)
-  crearCuerpo() {
-    // Implementación básica (puede ser sobreescrita)
-    this.body = Matter.Bodies.rectangle(this.x, this.y, this.height, this.width, this.options); // Ejemplo
-  }
-  // Método para agregar el cuerpo al mundo
-  añadirAlMundo(world) {
-    if (this.body) {
-      Matter.World.add(world, this.body);
-    }
-  }
-
   agregarEventListenersDelTeclado() {
     document.addEventListener('keydown', (event) => { this.keysPressed[event.key] = true; });
     document.addEventListener('keyup', (event) => { this.keysPressed[event.key] = false; });

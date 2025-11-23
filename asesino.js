@@ -57,7 +57,21 @@ class Asesino extends Persona {
       }
     });
     console.log("El Asesino fue insertado correctamente", textureData, x, y, juego);
-    this.crearCuerpo();
+    this.ancho = 9;
+    this.alto = 25;
+    this.crearCajitaDeMatterJS();
+  }
+
+  crearCajitaDeMatterJS() {
+    this.asesino = Matter.Bodies.rectangle(
+      this.posicion.x,
+      this.posicion.y,
+      this.ancho * 0.8,
+      this.alto * 0.8,
+      { restitution: 0.1, friction: 0.1, frictionAir: 0.01 }
+    );
+    this.asesino.angle = Math.random() * 3;
+    Matter.Composite.add(this.juego.engine.world, [this.asesino]);
   }
 
   updateMovement() {

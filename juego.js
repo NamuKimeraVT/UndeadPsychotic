@@ -89,7 +89,6 @@ class Juego {
     // run the engine
     Runner.run(this.matterRunner, this.engine);
   }
-
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
     this.pixiApp = new PIXI.Application();
@@ -114,7 +113,7 @@ class Juego {
     this.crearNivel();
     this.ui = new UI(this);
   }
-
+  
   updateDimensions() {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -136,7 +135,6 @@ class Juego {
     this.crearCiudadanos(40);
     this.crearPolicias(10);
   }
-
   async crearFondo() {
     this.fondo = new PIXI.Sprite(await PIXI.Assets.load("assets/piso2.png"));
     this.fondo.zIndex = -10;
@@ -145,7 +143,6 @@ class Juego {
     this.fondo.height = this.height;
     this.containerPrincipal.addChild(this.fondo);
   }
-
   crearParedes(x1, y1, x2, y2){
     const paredIzquierda = new Pared(this, x1, y1, x1, y2)
     const paredDerecha = new Pared(this, x2, y1, x2, y2)
@@ -156,7 +153,6 @@ class Juego {
     this.paredes.push(paredArriba);
     this.paredes.push(paredAbajo);
   }
-
   crearParedesDeLosLocales(){
 
   }
@@ -168,7 +164,6 @@ class Juego {
     const local = new Local(x, y, this, 1);
     this.objetosInanimados.push(local);
   }
-
   crearPalmeras() {
     this.crearPalmera(900, 700)
     this.crearPalmera(1000, 1400)
@@ -178,7 +173,6 @@ class Juego {
     const palmera = new Palmera(x, y, this, 0.5, 0.5);
     this.objetosInanimados.push(palmera);
   }
-
   crearFuentes() {
     this.crearFuente(1400, 800);
     this.crearFuente(3070, 1420);
@@ -187,7 +181,6 @@ class Juego {
     const fuente = new Fuente(x, y, this, 0.5, 0.5);
     this.objetosInanimados.push(fuente);
   }
-
   crearSillas() {
     this.crearSilla(650, 600)
   }
@@ -224,21 +217,7 @@ class Juego {
       this.policias.push(policia);
     }
   }
-
-  agregarListenersDeTeclado() {
-    window.onkeydown = (event) => {
-      this.teclado[event.key.toLowerCase()] = true;
-      if (event.key == "1") {
-        this.crearUnAmigo(this.mouse.posicion.x, this.mouse.posicion.y);
-      } else if (parseInt(event.key)) {
-        this.crearUnEnemigo(
-          parseInt(event.key),
-          this.mouse.posicion.x,
-          this.mouse.posicion.y
-        );
-      };
-    };
-  }
+  
   agregarInteractividadDelMouse() {
     // Escuchar el evento mousemove
     this.pixiApp.canvas.onmousemove = (event) => {
@@ -250,7 +229,6 @@ class Juego {
       unaPersona.asignarTarget(this.mouse);
     }
   }
-
   hacerQLaCamaraSigaAlProtagonista() {
     if (!this.targetCamara) return;
     // Ajustar la posición considerando el zoom actual
