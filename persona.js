@@ -1,6 +1,5 @@
 class Persona extends GameObject {
   spritesAnimados = {};
-  keysPressed = {};
   constructor(x, y, juego) {
     super(x, y, juego);
     this.container.label = "persona - " + this.id;
@@ -129,36 +128,32 @@ class Persona extends GameObject {
     this.meEstoyChocandoContraLaParedAbajo();
   }
   noChocarConLaParedIzquierda() {
-    if (this.posicion.x < 50) {
-      this.posicion.x = 50;
-      Matter.Body.setPosition(this.body, this.posicion);
+    if (this.body.position.x < 50) {
+      Matter.Body.setPosition(this.body, { x: 50, y: this.body.position.y });
       if (this.body.velocity.x < 0) {
         Matter.Body.setVelocity(this.body, { x: 0, y: this.body.velocity.y });
       }
     }
   }
   noChocarConLaParedDerecha() {
-    if (this.posicion.x > this.juego.width - 50) {
-      this.posicion.x = this.juego.width - 50;
-      Matter.Body.setPosition(this.body, this.posicion);
+    if (this.body.position.x > this.juego.width - 50) {
+      Matter.Body.setPosition(this.body, { x: this.juego.width - 50, y: this.body.position.y });
       if (this.body.velocity.x > 0) {
         Matter.Body.setVelocity(this.body, { x: 0, y: this.body.velocity.y });
       }
     }
   }
   noChocarConLaParedArriba() {
-    if (this.posicion.y < 50) {
-      this.posicion.y = 50;
-      Matter.Body.setPosition(this.body, this.posicion);
+    if (this.body.position.y < 50) {
+      Matter.Body.setPosition(this.body, { x: this.body.position.x, y: 50 });
       if (this.body.velocity.y < 0) {
         Matter.Body.setVelocity(this.body, { x: this.body.velocity.x, y: 0 });
       }
     }
   }
   noChocarConLaParedAbajo() {
-    if (this.posicion.y > this.juego.height - 50) {
-      this.posicion.y = this.juego.height - 50;
-      Matter.Body.setPosition(this.body, this.posicion);
+    if (this.body.position.y > this.juego.height - 50) {
+      Matter.Body.setPosition(this.body, { x: this.body.position.x, y: this.juego.height - 50 });
       if (this.body.velocity.y > 0) {
         Matter.Body.setVelocity(this.body, { x: this.body.velocity.x, y: 0 });
       }
@@ -219,8 +214,13 @@ class Persona extends GameObject {
     this.container = null;
     this.sprite = null;
   }
+  actualizarBodyDesdePosicion() {
+    Matter.Body.setPosition(this.body, this.posicion);
+    Matter.Body.setVelocity(this.body, this.velocidad);
+  }
   render() {
     super.render();
+    this.actualizarBodyDesdePosicion();
     this.cambiarDeSpriteAnimadoSegunAngulo()
     this.cambiarVelocidadDeAnimacionSegunVelocidadLineal();
     this.verificarSiEstoyMuerto();

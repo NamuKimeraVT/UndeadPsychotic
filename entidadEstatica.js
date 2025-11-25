@@ -14,14 +14,14 @@ class EntidadEstatica extends GameObject {
   }
 
   crearCajitaDeMatterJS() {
-    this.persona = Matter.Bodies.rectangle(
+    this.body = Matter.Bodies.rectangle(
       this.posicion.x,
       this.posicion.y,
       this.ancho * 0.8,
       this.alto * 0.8,
-      { restitution: 0.1, friction: 0.1, frictionAir: 0.01 }
+      { isStatic: true, restitution: 0.1, friction: 0.1, frictionAir: 0.01 }
     );
-    this.persona.angle = Math.random() * 3;
-    Matter.Composite.add(this.juego.engine.world, [this.persona]);
+    this.body.angle = Math.random() * 3;
+    Matter.Composite.add(this.juego.engine.world, [this.body]);
   }
 }

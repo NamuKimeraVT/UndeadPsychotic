@@ -1,10 +1,6 @@
 const Z_INDEX = {
-  containerBG: 0,
-  graficoSombrasProyectadas: 1,
-  containerIluminacion: 2,
   containerPrincipal: 3,
-  spriteAmarilloParaElAtardecer: 4,
-  containerUI: 5,
+  containerAsesino: 5,
 };
 
 class Juego {
@@ -64,11 +60,11 @@ class Juego {
       const personaB = this.personas.find(p => p.body === bodyB);
       
       if (personaA && personaB) {
-        if ((personaA === this.protagonista || personaA instanceof Policia) && personaB instanceof Ciudadano) {
-          console.log("Colisión detectada: Atacante colisiona con Ciudadano");
+        if (personaA === this.protagonista && personaB instanceof Ciudadano) {
+          console.log("Colisión detectada: Asesino colisiona con Ciudadano");
           personaB.recibirDanio(100, personaA);
-        } else if ((personaB === this.protagonista || personaB instanceof Policia) && personaA instanceof Ciudadano) {
-          console.log("Colisión detectada: Atacante colisiona con Policia");
+        } else if (personaB === this.protagonista && personaA instanceof Ciudadano) {
+          console.log("Colisión detectada: Asesino colisiona con Ciudadano");
           personaA.recibirDanio(100, personaB);
         }
         
@@ -106,12 +102,19 @@ class Juego {
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
     this.agregarInteractividadDelMouse();
     this.pixiApp.stage.sortableChildren = true;
+    this.containerAsesino = new PIXI.Container();
+    this.containerAsesino.label = "containerAsesino";
+    this.containerAsesino.zIndex = Z_INDEX.containerAsesino;
+    this.containerAsesino.position.set(0, 0);
+    this.pixiApp.stage.addChild(this.containerAsesino);
     this.crearNivel();
+    this.targetCamara = this.protagonista;
   }
   async crearNivel() {
     this.containerPrincipal = new PIXI.Container();
     this.containerPrincipal.label = "containerPrincipal";
     this.containerPrincipal.zIndex = Z_INDEX.containerPrincipal;
+    this.containerPrincipal.position.set(0, 0);
     this.pixiApp.stage.addChild(this.containerPrincipal);
     this.crearFondo();
     this.crearLocales();
@@ -119,7 +122,6 @@ class Juego {
     this.crearSillas();
     this.crearPalmeras();
     this.crearAsesino();
-    this.targetCamara = this.protagonista;
     this.crearCiudadanos(40);
     this.crearPolicias(10);
   }
@@ -171,11 +173,12 @@ class Juego {
     const protagonista = new Asesino(animacionesProtagonista, x, y, this);
     this.personas.push(protagonista);
     this.protagonista = protagonista;
+    this.targetCamara = protagonista;
   }
   async crearCiudadanos(cant) {
     for (let i = 0; i < cant; i++) {
-      const x = 2000;
-      const y = 1600;
+      const x = 1500 + Math.random() * 1000;
+      const y = 1000 + Math.random() * 800;
       const animacionesCiudadano = await PIXI.Assets.load("assets/personajes/img/ciudadano.json");
       const civiles = new Ciudadano(animacionesCiudadano, x, y, this);
       this.personas.push(civiles);
@@ -183,8 +186,8 @@ class Juego {
   }
   async crearPolicias(cant) {
     for (let i = 0; i < cant; i++) {
-      const x = 2000;
-      const y = 1500;
+      const x = 1500 + Math.random() * 1000;
+      const y = 1000 + Math.random() * 800;
       const animacionesPolicia = await PIXI.Assets.load("assets/personajes/img/policia.json");
       const policia = new Policia(animacionesPolicia, x, y, this);
       this.personas.push(policia);
@@ -198,23 +201,11 @@ class Juego {
   }
   hacerQLaCamaraSigaAlProtagonista() {
     if (!this.targetCamara) return;
-    // Ajustar la posición considerando el zoom actual
     let targetX = -this.targetCamara.posicion.x * this.zoom + this.width / 2;
     let targetY = -this.targetCamara.posicion.y * this.zoom + this.height / 2;
 
-    const x = (targetX - this.containerPrincipal.x) * 0.1;
-    const y = (targetY - this.containerPrincipal.y) * 0.1;
-
-    this.moverContainerPrincipalA(
-      this.containerPrincipal.x + x,
-      this.containerPrincipal.y + y
-    );
-  }
-  moverContainerPrincipalA(x, y) {
-    this.containerPrincipal.x = x;
-    this.containerPrincipal.y = y;
-    this.containerBG.x = x;
-    this.containerBG.y = y;
+    this.containerPrincipal.x = targetX;
+    this.containerPrincipal.y = targetY;
   }
   finDelJuego() {
     alert("Te moriste! fin del juego");

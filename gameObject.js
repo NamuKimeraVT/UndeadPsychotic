@@ -19,7 +19,7 @@ class GameObject {
     this.aceleracion = { x: 0, y: 0 };
     this.juego = juego;
     this.id = Math.floor(Math.random() * 99999999);
-    this.juego.containerPrincipal.addChild(this.container);
+    juego.containerPrincipal.addChild(this.container);
   }
   agregarEventListenersDelTeclado() {
     document.addEventListener('keydown', (event) => { this.keysPressed[event.key] = true; });

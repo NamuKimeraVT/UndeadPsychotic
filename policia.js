@@ -138,18 +138,19 @@ class Policia extends Persona {
   }
 
   tick() {
-    super.tick()
     this.actualizarMovimiento()
     this.posicion.x = this.body.position.x;
     this.posicion.y = this.body.position.y;
+    this.velocidad.x = this.body.velocity.x;
+    this.velocidad.y = this.body.velocity.y;
     this.noChocarConNingunaPared()
     this.calcularAnguloYVelocidadLineal();
   }
 
   render(){
-    this.container.x = this.posicion.x;
-    this.container.y = this.posicion.y;
-    this.container.zIndex = this.posicion.y;
+    this.container.x = this.body.position.x;
+    this.container.y = this.body.position.y;
+    this.container.zIndex = this.body.position.y;
     this.cambiarVelocidadDeAnimacionSegunVelocidadLineal();
     this.verificarSiEstoyMuerto();
   }
