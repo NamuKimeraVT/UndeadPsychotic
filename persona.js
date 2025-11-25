@@ -17,27 +17,31 @@ class Persona extends GameObject {
     this.crearCajitaDeMatterJS();
   }
   crearCajitaDeMatterJS() {
-    this.persona = Matter.Bodies.rectangle(
+    this.body = Matter.Bodies.rectangle(
       this.posicion.x,
       this.posicion.y,
       this.ancho * 0.8,
       this.alto * 0.8,
       { restitution: 0.1, friction: 0.1, frictionAir: 0.01 }
     );
-    this.persona.angle = Math.random() * 3;
-    Matter.Composite.add(this.juego.engine.world, [this.persona]);
+    this.body.angle = Math.random() * 3;
+    Matter.Composite.add(this.juego.engine.world, [this.body]);
   }
   // Método para mover la persona
   moverse(direction) {
     const speed = 5;
     let velocity = { x: 0, y: 0 };
     switch(direction) {
+      case 'movingUp':
       case 'up': velocity.y = -speed; break;
+      case 'movingDown':
       case 'down': velocity.y = speed; break;
+      case 'movingLeft':
       case 'left': velocity.x = -speed; break;
+      case 'movingRight':
       case 'right': velocity.x = speed; break;
     }
-    Matter.Body.setVelocity(this.persona, velocity);
+    Matter.Body.setVelocity(this.body, velocity);
   }
 
   // Método para retroceder (se llamará en el evento de colisión)
@@ -63,12 +67,12 @@ class Persona extends GameObject {
   }
 
   cambiarAnimacion(cual) {
-    //hacemos todos invisibles
     for (let key of Object.keys(this.spritesAnimados)) {
       this.spritesAnimados[key].visible = false;
     }
-    //y despues hacemos visible el q queremos
-    this.spritesAnimados[cual].visible = true;
+    if (this.spritesAnimados[cual]) {
+      this.spritesAnimados[cual].visible = true;
+    }
   }
   cargarSpritesAnimados(textureData, escala) {
     for (let key of Object.keys(textureData.animations)) {
@@ -77,7 +81,7 @@ class Persona extends GameObject {
       this.spritesAnimados[key].loop = true;
       this.spritesAnimados[key].animationSpeed = 0.1;
       this.spritesAnimados[key].scale.set(escala);
-      this.spritesAnimados[key].anchor.set(1, 1);
+      this.spritesAnimados[key].anchor.set(0.5, 0.5);
       this.container.addChild(this.spritesAnimados[key]);
     }
   }
@@ -140,32 +144,29 @@ class Persona extends GameObject {
   }
   noChocarConLaParedIzquierda() {
     if (this.meEstoyChocandoContraLaParedIzquierda()) {
-      this.velocidad.x = 100
-      // console.log(this.nombre, "choco con pared izquierda")
+      this.retroceder('left');
     }
   }
   noChocarConLaParedDerecha() {
     if (this.meEstoyChocandoContraLaParedDerecha()) {
-      this.velocidad.x = -100
-      // console.log(this.nombre, "choco con pared derecha")
+      this.retroceder('right');
     }
   }
   noChocarConLaParedArriba() {
     if (this.meEstoyChocandoContraLaParedArriba()) {
-      this.velocidad.y = 100
-      // console.log(this.nombre, "choco con pared arriba")
+      this.retroceder('up');
     }
   }
   noChocarConLaParedAbajo() {
     if (this.meEstoyChocandoContraLaParedAbajo()) {
-      this.velocidad.y = -100
-      // console.log(this.nombre, "choco con pared abajo")
+      this.retroceder('down');
     }
   }
   noChocarConNingunaPared() {
     this.noChocarConLaParedIzquierda()
     this.noChocarConLaParedDerecha()
     this.noChocarConLaParedArriba()
+    this.noChocarConLaParedAbajo()
   }
   retrocederSiChocoConAlgunaPared() {
     if (this.meEstoyChocandoConAlgunaPared()) {

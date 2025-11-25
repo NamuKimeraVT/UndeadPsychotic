@@ -14,7 +14,7 @@ class GameObject {
   constructor(x, y, juego) {
     this.container = new PIXI.Container();
     this.container.label = "container";
-    this.keysPressed = [];
+    this.keysPressed = {};
     this.vision = Math.random() * 200 + 1300;
     this.posicion = { x: x, y: y };
     this.velocidad = { x: Math.random() * 10, y: Math.random() * 10 };

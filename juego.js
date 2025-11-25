@@ -40,6 +40,7 @@ class Juego {
       Composite = Matter.Composite;
     // create an engine
     this.engine = Engine.create();
+    this.engine.world.gravity.y = 0;
     // Crear bordes de la pantalla
     this.piso = Bodies.rectangle(this.width / 2, this.height, this.width, 60, { isStatic: true, friction: 1,});
     this.techo = Bodies.rectangle(this.width / 2, 0, this.width, 60, { isStatic: true, friction: 1,});
@@ -160,17 +161,16 @@ class Juego {
       this.mouse.posicion = { x: event.x, y: event.y };
     };
   }
+  hacerQLaCamaraSigaAlAsesino() {
+    if (!this.protagonista) return;
+    this.targetCamara = this.protagonista;
+  }
   hacerQLaCamaraSigaAlProtagonista() {
     if (!this.targetCamara) return;
-    // Ajustar la posición considerando el zoom actual
-    let targetX = -this.targetCamara.posicion.x * this.zoom + this.width / 2;
-    let targetY = -this.targetCamara.posicion.y * this.zoom + this.height / 2;
-    const x = (targetX - this.containerPrincipal.x) * 0.1;
-    const y = (targetY - this.containerPrincipal.y) * 0.1;
-    this.containerPrincipal.x += x;
-    this.containerPrincipal.y += y;
-    this.moverContainerPrincipalA(this.containerPrincipal.x + x, this.containerPrincipal.y + y);
-    console.log("La camara funciona")
+    let targetX = -this.targetCamara.posicion.x + this.width / 2;
+    let targetY = -this.targetCamara.posicion.y + this.height / 2;
+    this.containerPrincipal.x = targetX;
+    this.containerPrincipal.y = targetY;
   }
   moverContainerPrincipalA(x, y) {
     this.containerPrincipal.x = x;
@@ -191,7 +191,6 @@ class Juego {
   }
 
   gameLoop(time) {
-    console.log("gameLoop", time, this.ahora);
     for (let unpersona of this.personas) unpersona.tick();
     for (let unpersona of this.personas) unpersona.render();
     this.hacerQLaCamaraSigaAlProtagonista();

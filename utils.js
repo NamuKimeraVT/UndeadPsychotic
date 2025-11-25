@@ -480,16 +480,12 @@ function createFSM(initialState, transitions) {
     if (!transition) {
       throw new Error(`Transición no definida desde el estado "${currentState}" para el evento "${event}"`);
     }
-    if (transition) {
-      currentState = transition.target;
-      if (transition.action) {
-        transition.action();
-      }
-      return true; // Transición exitosa
-    } else {
-      console.warn(`Evento inválido "${event}" en el estado "${currentState}"`);
-      return false; // No hubo transición
+    
+    currentState = transition.target;
+    if (transition.action) {
+      transition.action();
     }
+    return true;
   }
   function getCurrentState() {
     return currentState;

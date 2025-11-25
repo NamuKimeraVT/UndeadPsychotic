@@ -7,13 +7,9 @@ class Policia extends Persona {
     this.distanciaParaLlegarALTarget = 500;
     this.factorRepelerSuavementeObstaculos = 0.66;
     this.factorAlineacion = 0.33;
-    this.asignarTarget({ posicion: { x: Math.random() * this.juego.width, y: Math.random() * this.juego.height } }); // Al usar el ancho y alto del juego los ciudadanos se mueven al azar
+    this.asignarTarget({ posicion: { x: Math.random() * this.juego.width, y: Math.random() * this.juego.height } });
     this.ancho = 10;
     this.alto = 25;
-    /*this.sprite.width = this.ancho;
-    this.sprite.height = this.alto;*/
-    this.crearCajitaDeMatterJS();
-    console.log("La Ley fue insertada correctamente", textureData, x, y, juego)
   }
 
   estaElAsesinoEnMiAreaDeVision(){
