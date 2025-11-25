@@ -214,6 +214,13 @@ class Juego {
   gameLoop(time) {
     for (let unpersona of this.personas) unpersona.tick();
     for (let unpersona of this.personas) unpersona.render();
-    this.hacerQLaCamaraSigaAlProtagonista();
+    if (this.protagonista) {
+      const offsetX = this.width / 4.4 - this.protagonista.posicion.x;
+      const offsetY = this.height / 4.4 - this.protagonista.posicion.y;
+      this.containerPrincipal.x = offsetX;
+      this.containerPrincipal.y = offsetY;
+      this.containerAsesino.x = offsetX;
+      this.containerAsesino.y = offsetY;
+    }
   }
 }
