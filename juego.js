@@ -10,10 +10,7 @@ const Z_INDEX = {
 class Juego {
   pixiApp;
   personas = [];
-  ciudadanos = [];
-  policias = [];
   objetosInanimados = [];
-  paredes = [];
   protagonista;
   width;
   height;
@@ -75,7 +72,6 @@ class Juego {
       height: this.height,
       antialias: true,
       resolution: 1,
-      resizeTo: window,
     };
     await this.pixiApp.init(opcionesDePixi);
     document.body.appendChild(this.pixiApp.canvas);
@@ -83,7 +79,6 @@ class Juego {
     this.agregarInteractividadDelMouse();
     this.pixiApp.stage.sortableChildren = true;
     this.crearNivel();
-    this.ui = new UI(this);
   }
   async crearNivel() {
     this.containerPrincipal = new PIXI.Container();
@@ -157,7 +152,6 @@ class Juego {
       const animacionesCiudadano = await PIXI.Assets.load("assets/personajes/img/ciudadano.json");
       const civiles = new Ciudadano(animacionesCiudadano, x, y, this);
       this.personas.push(civiles);
-      this.ciudadanos.push(civiles);
     }
   }
   async crearPolicias(cant) {
@@ -167,7 +161,6 @@ class Juego {
       const animacionesPolicia = await PIXI.Assets.load("assets/personajes/img/policia.json");
       const policia = new Policia(animacionesPolicia, x, y, this);
       this.personas.push(policia);
-      this.policias.push(policia);
     }
   }
   
@@ -199,12 +192,6 @@ class Juego {
     this.zoom = zoom;
     this.containerPrincipal.scale.set(this.zoom);
     // this.containerBG.scale.set(this.zoom);
-  }
-  calcularFPS() {
-    this.deltaTime = performance.now() - this.ahora;
-    this.ahora = performance.now();
-    this.fps = 1000 / this.deltaTime;
-    this.ratioDeltaTime = this.deltaTime / 16.66;
   }
   toggleDebug() {
     this.debug = !this.debug;
