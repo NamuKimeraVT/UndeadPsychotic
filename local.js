@@ -11,7 +11,7 @@ class Local extends EntidadEstatica {
 
     async crearSprite() {
         this.sprite = new PIXI.Sprite(await PIXI.Assets.load("assets/locales.png"));
-        this.sprite.anchor.set(1, 1);
+        this.sprite.anchor.set(0.5, 1);
         this.container.addChild(this.sprite);
         this.sprite.scale.x = this.scaleX;
         this.render();

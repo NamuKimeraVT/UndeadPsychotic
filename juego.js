@@ -38,10 +38,10 @@ class Juego {
     this.engine = Engine.create();
     this.engine.world.gravity.y = 0;
     // Crear bordes de la pantalla
-    this.piso = Bodies.rectangle(this.width / 2, this.height + 30, this.width, 60, { isStatic: true, friction: 1,});
-    this.techo = Bodies.rectangle(this.width / 2, -30, this.width, 60, { isStatic: true, friction: 1,});
-    this.paredIzquierda = Bodies.rectangle(-30, this.height / 2, 60, this.height, { isStatic: true, friction: 1,});
-    this.paredDerecha = Bodies.rectangle(this.width + 30, this.height / 2, 60, this.height, { isStatic: true, friction: 1,});
+    this.piso = Bodies.rectangle(this.width / 2, this.height + 30, this.width, 60, { isStatic: true, friction: 1, });
+    this.techo = Bodies.rectangle(this.width / 2, -30, this.width, 60, { isStatic: true, friction: 1, });
+    this.paredIzquierda = Bodies.rectangle(-30, this.height / 2, 60, this.height, { isStatic: true, friction: 1, });
+    this.paredDerecha = Bodies.rectangle(this.width + 30, this.height / 2, 60, this.height, { isStatic: true, friction: 1, });
     this.piso.label = "piso";
     this.techo.label = "techo";
     this.paredIzquierda.label = "paredIzquierda";
@@ -49,7 +49,7 @@ class Juego {
     // add all of the bodies to the world
     Composite.add(this.engine.world, [this.piso, this.techo, this.paredIzquierda, this.paredDerecha]);
     // Detector de colisiones
-    Events.on(this.engine, 'collisionStart', (event) => {this.manejarColisiones(event.pairs);});
+    Events.on(this.engine, 'collisionStart', (event) => { this.manejarColisiones(event.pairs); });
     // run the renderer
     if (this.matterRenderer) Render.run(this.matterRenderer);
     // create runner
@@ -78,7 +78,7 @@ class Juego {
           personaA.recibirDanio(100, personaB);
           this.score += 100;
         }
-        
+
         if (personaA instanceof Ciudadano && personaB === this.protagonista) {
           console.log("Colisión detectada: Ciudadano toca al Asesino");
           personaA.recibirDanio(100, personaB);
@@ -86,7 +86,7 @@ class Juego {
           console.log("Colisión detectada: Ciudadano toca al Asesino");
           personaB.recibirDanio(100, personaA);
         }
-        
+
         if (personaA instanceof Policia && personaB === this.protagonista) {
           console.log("Colisión detectada: Policía toca al Asesino");
           personaB.recibirDanio(10, personaA);
@@ -95,19 +95,19 @@ class Juego {
           personaA.recibirDanio(10, personaB);
         }
       }
-      
+
       if (personaA && objetoB) {
         console.log("Colisión detectada: Persona colisiona con objeto inanimado");
       }
-      
+
       if (personaB && objetoA) {
         console.log("Colisión detectada: Persona colisiona con objeto inanimado");
       }
-      
+
       if (personaA && (bodyB.label === "piso" || bodyB.label === "techo" || bodyB.label === "paredIzquierda" || bodyB.label === "paredDerecha")) {
         console.log("Colisión detectada: Persona colisiona con pared -", bodyB.label);
       }
-      
+
       if (personaB && (bodyA.label === "piso" || bodyA.label === "techo" || bodyA.label === "paredIzquierda" || bodyA.label === "paredDerecha")) {
         console.log("Colisión detectada: Persona colisiona con pared -", bodyA.label);
       }
@@ -119,8 +119,8 @@ class Juego {
     globalThis.__PIXI_APP__ = this.pixiApp;
     const opcionesDePixi = {
       background: "#1099bb",
-      width: this.width,
-      height: this.height,
+      width: window.innerWidth,
+      height: window.innerHeight,
       antialias: true,
       resolution: 1,
       resizeTo: window,
@@ -166,28 +166,28 @@ class Juego {
     this.fondo.height = this.height;
     this.containerPrincipal.addChild(this.fondo);
   }
-  crearLocales(){
-    this.crearLocal(1920, 1080);
-    this.crearLocal(3840, 1080);
+  crearLocales() {
+    this.crearLocal(960, 1080);
+    this.crearLocal(2880, 1080);
   }
   crearLocal(x, y) {
     const local = new Local(x, y, this, 1);
     this.objetosInanimados.push(local);
   }
   crearPalmeras() {
-    this.crearPalmera(900, 700)
+    this.crearPalmera(700, 700)
     this.crearPalmera(1000, 1400)
     this.crearPalmera(3000, 800)
   }
-  crearPalmera(x, y){
-    const palmera = new Palmera(x, y, this, 0.5, 0.5);
+  crearPalmera(x, y) {
+    const palmera = new Palmera(x, y, this, 1, 1);
     this.objetosInanimados.push(palmera);
   }
   crearFuentes() {
     this.crearFuente(1400, 800);
     this.crearFuente(3070, 1420);
   }
-  crearFuente(x, y){
+  crearFuente(x, y) {
     const fuente = new Fuente(x, y, this, 0.5, 0.5);
     this.objetosInanimados.push(fuente);
   }
@@ -195,7 +195,7 @@ class Juego {
     this.crearSilla(650, 1000)
     this.crearSilla(2650, 1500)
   }
-  crearSilla(x, y){
+  crearSilla(x, y) {
     const silla = new Silla(x, y, this, 0.5, 0.5);
     this.objetosInanimados.push(silla);
   }
@@ -232,26 +232,18 @@ class Juego {
       this.mouse.posicion = { x: event.x, y: event.y };
     };
   }
-  hacerQLaCamaraSigaAlProtagonista() {
-    if (!this.targetCamara) return;
-    let targetX = -this.targetCamara.posicion.x * this.zoom + this.width / 2;
-    let targetY = -this.targetCamara.posicion.y * this.zoom + this.height / 2;
-
-    this.containerPrincipal.x = targetX;
-    this.containerPrincipal.y = targetY;
-  }
   finDelJuego() {
     alert("Te moriste! fin del juego. Tu puntaje final es: " + this.score);
   }
   dibujarCollidersDebug() {
     this.containerDebug.removeChildren();
     const bodies = Matter.Composite.allBodies(this.engine.world);
-    
+
     for (let body of bodies) {
       const graphics = new PIXI.Graphics();
       graphics.lineStyle(2, 0xFF0000, 0.8);
       graphics.beginFill(0xFFFFFF, 0.1);
-      
+
       const vertices = body.vertices;
       if (vertices && vertices.length > 0) {
         graphics.moveTo(vertices[0].x, vertices[0].y);
@@ -260,7 +252,7 @@ class Juego {
         }
         graphics.lineTo(vertices[0].x, vertices[0].y);
       }
-      
+
       graphics.endFill();
       this.containerDebug.addChild(graphics);
     }
@@ -275,12 +267,16 @@ class Juego {
     if (this.protagonista) {
       const offsetX = this.width / 4.4 - this.protagonista.posicion.x;
       const offsetY = this.height / 4.4 - this.protagonista.posicion.y;
-      this.containerPrincipal.x = offsetX;
-      this.containerPrincipal.y = offsetY;
-      this.containerAsesino.x = offsetX;
-      this.containerAsesino.y = offsetY;
-      this.containerDebug.x = offsetX;
-      this.containerDebug.y = offsetY;
+      if (offsetX < 0 && offsetX > window.innerWidth - this.width) {
+        this.containerPrincipal.x = offsetX;
+        this.containerAsesino.x = offsetX;
+        this.containerDebug.x = offsetX;
+      }
+      if (offsetY < 0 && offsetY > window.innerHeight - this.height) {
+        this.containerPrincipal.y = offsetY;
+        this.containerAsesino.y = offsetY;
+        this.containerDebug.y = offsetY;
+      }
     }
   }
 }

@@ -12,7 +12,7 @@ class EntidadEstatica extends GameObject {
 
   crearCajitaDeMatterJS() {
     this.body = Matter.Bodies.rectangle(
-      this.posicion.x - this.ancho * 0.5,
+      this.posicion.x,
       this.posicion.y - this.alto * 0.5,
       this.ancho,
       this.alto,

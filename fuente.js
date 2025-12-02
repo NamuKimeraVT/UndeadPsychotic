@@ -4,7 +4,7 @@ class Fuente extends EntidadEstatica {
         this.radio = 10;
         this.scaleX = scaleX || 1;
         this.scaleY = scaleY || 1;
-        this.ancho = 100;
+        this.ancho = 200;
         this.alto = 100;
         this.container.label = "Fuente" + this.id;
         this.crearSprite();
@@ -13,7 +13,7 @@ class Fuente extends EntidadEstatica {
 
     async crearSprite() {
         this.sprite = new PIXI.Sprite(await PIXI.Assets.load("assets/fuente.png"));
-        this.sprite.anchor.set(1, 1);
+        this.sprite.anchor.set(0.5, 1);
         this.container.addChild(this.sprite);
         this.sprite.scale.x = this.scaleX;
         this.sprite.scale.y = this.scaleY;
