@@ -58,78 +58,6 @@ class Juego {
     // run the engine
     Runner.run(this.matterRunner, this.engine);
   }
-
-  manejarColisiones(pairs) {
-    for (let pair of pairs) {
-      const bodyA = pair.bodyA;
-      const bodyB = pair.bodyB;
-      const objA = bodyA.gameObject;
-      const objB = bodyB.gameObject;
-      const personaA = objA instanceof Persona ? objA : null;
-      const personaB = objB instanceof Persona ? objB : null;
-      const objetoA = !personaA ? objA : null;
-      const objetoB = !personaB ? objB : null;
-      if (personaA && personaB) {
-        if (personaA === this.protagonista && personaB instanceof Ciudadano) {
-          console.log("Colisión detectada: Asesino colisiona con Ciudadano");
-          personaB.recibirDanio(100, personaA);
-          this.score += 100;
-        } else if (personaB === this.protagonista && personaA instanceof Ciudadano) {
-          console.log("Colisión detectada: Asesino colisiona con Ciudadano");
-          personaA.recibirDanio(100, personaB);
-          this.score += 100;
-        }
-        if (personaA instanceof Ciudadano && personaB === this.protagonista) {
-          console.log("Colisión detectada: Ciudadano toca al Asesino");
-          personaA.recibirDanio(100, personaB);
-        } else if (personaB instanceof Ciudadano && personaA === this.protagonista) {
-          console.log("Colisión detectada: Ciudadano toca al Asesino");
-          personaB.recibirDanio(100, personaA);
-        }
-        if (personaA instanceof Policia && personaB === this.protagonista) {
-          console.log("Colisión detectada: Policía toca al Asesino");
-          personaB.recibirDanio(10, personaA);
-        } else if (personaB instanceof Policia && personaA === this.protagonista) {
-          console.log("Colisión detectada: Policía toca al Asesino");
-          personaA.recibirDanio(10, personaB);
-        }
-        if (personaA instanceof Ciudadano && personaB instanceof Policia) {
-          personaA.cambiarRuta();
-          personaB.cambiarRuta();
-        } else if (personaB instanceof Ciudadano && personaA instanceof Policia) {
-          personaB.cambiarRuta();
-          personaA.cambiarRuta();
-        }
-      }
-      if (personaA && objetoB) {
-        console.log("Colisión detectada: Persona colisiona con objeto inanimado");
-        if (personaA instanceof Ciudadano || personaA instanceof Policia) {
-          personaA.cambiarRuta();
-        }
-      }
-
-      if (personaB && objetoA) {
-        console.log("Colisión detectada: Persona colisiona con objeto inanimado");
-        if (personaB instanceof Ciudadano || personaB instanceof Policia) {
-          personaB.cambiarRuta();
-        }
-      }
-
-      if (personaA && (bodyB.label === "piso" || bodyB.label === "techo" || bodyB.label === "paredIzquierda" || bodyB.label === "paredDerecha")) {
-        console.log("Colisión detectada: Persona colisiona con pared -", bodyB.label);
-        if (personaA instanceof Ciudadano || personaA instanceof Policia) {
-          personaA.cambiarRuta();
-        }
-      }
-
-      if (personaB && (bodyA.label === "piso" || bodyA.label === "techo" || bodyA.label === "paredIzquierda" || bodyA.label === "paredDerecha")) {
-        console.log("Colisión detectada: Persona colisiona con pared -", bodyA.label);
-        if (personaB instanceof Ciudadano || personaB instanceof Policia) {
-          personaB.cambiarRuta();
-        }
-      }
-    }
-  }
   async initPIXI() {
     //creamos la aplicacion de pixi y la guardamos en la propiedad pixiApp
     this.pixiApp = new PIXI.Application();
@@ -166,7 +94,7 @@ class Juego {
     this.crearSillas();
     this.crearPalmeras();
     this.crearAsesino();
-    this.crearCiudadanos(40);
+    this.crearCiudadanos(20);
     this.crearPolicias(10);
     this.ui = new UI(this);
   }
@@ -238,6 +166,77 @@ class Juego {
       this.personas.push(policia);
     }
   }
+  manejarColisiones(pairs) {
+    for (let pair of pairs) {
+      const bodyA = pair.bodyA;
+      const bodyB = pair.bodyB;
+      const objA = bodyA.gameObject;
+      const objB = bodyB.gameObject;
+      const personaA = objA instanceof Persona ? objA : null;
+      const personaB = objB instanceof Persona ? objB : null;
+      const objetoA = !personaA ? objA : null;
+      const objetoB = !personaB ? objB : null;
+      if (personaA && personaB) {
+        if (personaA === this.protagonista && personaB instanceof Ciudadano) {
+          console.log("Colisión detectada: Asesino colisiona con Ciudadano");
+          personaB.recibirDanio(100, personaA);
+          this.score += 100;
+        } else if (personaB === this.protagonista && personaA instanceof Ciudadano) {
+          console.log("Colisión detectada: Asesino colisiona con Ciudadano");
+          personaA.recibirDanio(100, personaB);
+          this.score += 100;
+        }
+        if (personaA instanceof Ciudadano && personaB === this.protagonista) {
+          console.log("Colisión detectada: Ciudadano toca al Asesino");
+          personaA.recibirDanio(100, personaB);
+        } else if (personaB instanceof Ciudadano && personaA === this.protagonista) {
+          console.log("Colisión detectada: Ciudadano toca al Asesino");
+          personaB.recibirDanio(100, personaA);
+        }
+        if (personaA instanceof Policia && personaB === this.protagonista) {
+          console.log("Colisión detectada: Policía toca al Asesino");
+          personaB.recibirDanio(10, personaA);
+        } else if (personaB instanceof Policia && personaA === this.protagonista) {
+          console.log("Colisión detectada: Policía toca al Asesino");
+          personaA.recibirDanio(10, personaB);
+        }
+        if (personaA instanceof Ciudadano && personaB instanceof Policia) {
+          personaA.cambiarRuta();
+          personaB.cambiarRuta();
+        } else if (personaB instanceof Ciudadano && personaA instanceof Policia) {
+          personaB.cambiarRuta();
+          personaA.cambiarRuta();
+        }
+      }
+      if (personaA && objetoB) {
+        console.log("Colisión detectada: Persona colisiona con objeto inanimado");
+        if (personaA instanceof Ciudadano || personaA instanceof Policia) {
+          personaA.cambiarRuta();
+        }
+      }
+
+      if (personaB && objetoA) {
+        console.log("Colisión detectada: Persona colisiona con objeto inanimado");
+        if (personaB instanceof Ciudadano || personaB instanceof Policia) {
+          personaB.cambiarRuta();
+        }
+      }
+
+      if (personaA && (bodyB.label === "piso" || bodyB.label === "techo" || bodyB.label === "paredIzquierda" || bodyB.label === "paredDerecha")) {
+        console.log("Colisión detectada: Persona colisiona con pared -", bodyB.label);
+        if (personaA instanceof Ciudadano || personaA instanceof Policia) {
+          personaA.cambiarRuta();
+        }
+      }
+
+      if (personaB && (bodyA.label === "piso" || bodyA.label === "techo" || bodyA.label === "paredIzquierda" || bodyA.label === "paredDerecha")) {
+        console.log("Colisión detectada: Persona colisiona con pared -", bodyA.label);
+        if (personaB instanceof Ciudadano || personaB instanceof Policia) {
+          personaB.cambiarRuta();
+        }
+      }
+    }
+  }
   guardarMejorPuntaje(puntaje) {
     if (puntaje > this.bestScore) {
       this.bestScore = puntaje;
@@ -253,11 +252,6 @@ class Juego {
   finDelJuego() {
     if(this.protagonista.vida <= 0){
       alert("Te moriste! fin del juego. Tu puntaje final es: " + this.score);
-      this.guardarMejorPuntaje(this.score);
-    }
-    const ciudadanosRestantes = this.personas.filter(p => p instanceof Ciudadano).length;
-    if(ciudadanosRestantes === 0){
-      alert("Ganaste! mataste a todos los ciudadanos. Tu puntaje final es: " + this.score);
       this.guardarMejorPuntaje(this.score);
     }
   }
@@ -287,6 +281,7 @@ class Juego {
     if (this.mostrarCollidersDebug) {
       this.dibujarCollidersDebug();
     }
+    
     if (this.protagonista) {
       const offsetX = this.width / 4 - this.protagonista.posicion.x;
       const offsetY = this.height / 4 - this.protagonista.posicion.y;
