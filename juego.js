@@ -9,6 +9,7 @@ class Juego {
   objetosInanimados = [];
   protagonista;
   score = 0;
+  bestScore = 0;
   ahora = performance.now();
 
   constructor() {
@@ -77,7 +78,6 @@ class Juego {
           personaA.recibirDanio(100, personaB);
           this.score += 100;
         }
-
         if (personaA instanceof Ciudadano && personaB === this.protagonista) {
           console.log("Colisión detectada: Ciudadano toca al Asesino");
           personaA.recibirDanio(100, personaB);
@@ -85,7 +85,6 @@ class Juego {
           console.log("Colisión detectada: Ciudadano toca al Asesino");
           personaB.recibirDanio(100, personaA);
         }
-
         if (personaA instanceof Policia && personaB === this.protagonista) {
           console.log("Colisión detectada: Policía toca al Asesino");
           personaB.recibirDanio(10, personaA);
@@ -94,7 +93,6 @@ class Juego {
           personaA.recibirDanio(10, personaB);
         }
       }
-
       if (personaA && objetoB) {
         console.log("Colisión detectada: Persona colisiona con objeto inanimado");
       }
@@ -127,7 +125,6 @@ class Juego {
     await this.pixiApp.init(opcionesDePixi);
     document.body.appendChild(this.pixiApp.canvas);
     this.pixiApp.ticker.add(this.gameLoop.bind(this));
-    this.agregarInteractividadDelMouse();
     this.pixiApp.stage.sortableChildren = true;
     this.containerDebug = new PIXI.Container();
     this.containerDebug.label = "containerDebug";
@@ -220,29 +217,35 @@ class Juego {
       this.personas.push(policia);
     }
   }
-  agregarInteractividadDelMouse() {
-    // Escuchar el evento mousemove
-    this.pixiApp.canvas.onmousemove = (event) => {
-      this.mouse.posicion = { x: event.x, y: event.y };
-    };
+  guardarMejorPuntaje(puntaje) {
+    if (puntaje > this.bestScore) {
+      this.bestScore = puntaje;
+      localStorage.setItem('bestScore', this.bestScore);
+    }
+  }
+  cargarMejorPuntaje() {
+    const puntajeGuardado = localStorage.getItem('bestScore');
+    if (puntajeGuardado) {
+      this.bestScore = parseInt(puntajeGuardado);
+    }
   }
   finDelJuego() {
     if(this.protagonista.vida <= 0){
       alert("Te moriste! fin del juego. Tu puntaje final es: " + this.score);
+      guardarMejorPuntaje(this.score);
     }
     if(this.personas.length == 10){
       alert("Ganaste! mataste a todos los ciudadanos. Tu puntaje final es: " + this.score);
+      guardarMejorPuntaje(this.score);
     }
   }
   dibujarCollidersDebug() {
     this.containerDebug.removeChildren();
     const bodies = Matter.Composite.allBodies(this.engine.world);
-
     for (let body of bodies) {
       const graphics = new PIXI.Graphics();
       graphics.lineStyle(2, 0xFF0000, 0.8);
       graphics.beginFill(0xFFFFFF, 0.1);
-
       const vertices = body.vertices;
       if (vertices && vertices.length > 0) {
         graphics.moveTo(vertices[0].x, vertices[0].y);
@@ -251,12 +254,10 @@ class Juego {
         }
         graphics.lineTo(vertices[0].x, vertices[0].y);
       }
-
       graphics.endFill();
       this.containerDebug.addChild(graphics);
     }
   }
-
   gameLoop(time) {
     for (let unpersona of this.personas) unpersona.tick();
     for (let unpersona of this.personas) unpersona.render();
