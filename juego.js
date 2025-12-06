@@ -255,6 +255,13 @@ class Juego {
       this.guardarMejorPuntaje(this.score);
     }
   }
+  ganaste() {
+    const ciudadanosRestantes = this.personas.filter(p => p instanceof Ciudadano).length;
+    if(ciudadanosRestantes === 0){
+      alert("Ganaste! mataste a todos los ciudadanos. Tu puntaje final es: " + this.score);
+      this.guardarMejorPuntaje(this.score);
+    }
+  }
   dibujarCollidersDebug() {
     this.containerDebug.removeChildren();
     const bodies = Matter.Composite.allBodies(this.engine.world);
@@ -281,7 +288,7 @@ class Juego {
     if (this.mostrarCollidersDebug) {
       this.dibujarCollidersDebug();
     }
-    
+    this.ganaste();
     if (this.protagonista) {
       const offsetX = this.width / 4 - this.protagonista.posicion.x;
       const offsetY = this.height / 4 - this.protagonista.posicion.y;
