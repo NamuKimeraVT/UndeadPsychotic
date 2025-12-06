@@ -91,6 +91,9 @@ class Ciudadano extends Persona {
     }
     Matter.Body.setVelocity(this.body, velocity);
   }
+  cambiarRuta() {
+    this.asignarTarget({ posicion: { x: Math.random() * this.juego.width, y: Math.random() * this.juego.height } });
+  }
 
   actualizarMovimiento(){
     let direction = 'stop';

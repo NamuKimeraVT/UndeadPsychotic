@@ -1,6 +1,7 @@
 const Z_INDEX = {
   containerPrincipal: 3,
   containerDebug: 10,
+  containerUI: 100,
 };
 
 class Juego {
@@ -92,21 +93,40 @@ class Juego {
           console.log("Colisión detectada: Policía toca al Asesino");
           personaA.recibirDanio(10, personaB);
         }
+        if (personaA instanceof Ciudadano && personaB instanceof Policia) {
+          personaA.cambiarRuta();
+          personaB.cambiarRuta();
+        } else if (personaB instanceof Ciudadano && personaA instanceof Policia) {
+          personaB.cambiarRuta();
+          personaA.cambiarRuta();
+        }
       }
       if (personaA && objetoB) {
         console.log("Colisión detectada: Persona colisiona con objeto inanimado");
+        if (personaA instanceof Ciudadano || personaA instanceof Policia) {
+          personaA.cambiarRuta();
+        }
       }
 
       if (personaB && objetoA) {
         console.log("Colisión detectada: Persona colisiona con objeto inanimado");
+        if (personaB instanceof Ciudadano || personaB instanceof Policia) {
+          personaB.cambiarRuta();
+        }
       }
 
       if (personaA && (bodyB.label === "piso" || bodyB.label === "techo" || bodyB.label === "paredIzquierda" || bodyB.label === "paredDerecha")) {
         console.log("Colisión detectada: Persona colisiona con pared -", bodyB.label);
+        if (personaA instanceof Ciudadano || personaA instanceof Policia) {
+          personaA.cambiarRuta();
+        }
       }
 
       if (personaB && (bodyA.label === "piso" || bodyA.label === "techo" || bodyA.label === "paredIzquierda" || bodyA.label === "paredDerecha")) {
         console.log("Colisión detectada: Persona colisiona con pared -", bodyA.label);
+        if (personaB instanceof Ciudadano || personaB instanceof Policia) {
+          personaB.cambiarRuta();
+        }
       }
     }
   }
@@ -148,6 +168,7 @@ class Juego {
     this.crearAsesino();
     this.crearCiudadanos(40);
     this.crearPolicias(10);
+    this.ui = new UI(this);
   }
   async crearFondo() {
     this.fondo = new PIXI.Sprite(await PIXI.Assets.load("assets/piso2.png"));
@@ -232,11 +253,12 @@ class Juego {
   finDelJuego() {
     if(this.protagonista.vida <= 0){
       alert("Te moriste! fin del juego. Tu puntaje final es: " + this.score);
-      guardarMejorPuntaje(this.score);
+      this.guardarMejorPuntaje(this.score);
     }
-    if(this.personas.length == 10){
+    const ciudadanosRestantes = this.personas.filter(p => p instanceof Ciudadano).length;
+    if(ciudadanosRestantes === 0){
       alert("Ganaste! mataste a todos los ciudadanos. Tu puntaje final es: " + this.score);
-      guardarMejorPuntaje(this.score);
+      this.guardarMejorPuntaje(this.score);
     }
   }
   dibujarCollidersDebug() {
@@ -261,6 +283,7 @@ class Juego {
   gameLoop(time) {
     for (let unpersona of this.personas) unpersona.tick();
     for (let unpersona of this.personas) unpersona.render();
+    if (this.ui) this.ui.render();
     if (this.mostrarCollidersDebug) {
       this.dibujarCollidersDebug();
     }
