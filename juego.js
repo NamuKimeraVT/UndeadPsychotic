@@ -181,24 +181,30 @@ class Juego {
           console.log("Colisión detectada: Asesino colisiona con Ciudadano");
           personaB.recibirDanio(100, personaA);
           this.score += 100;
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         } else if (personaB === this.protagonista && personaA instanceof Ciudadano) {
           console.log("Colisión detectada: Asesino colisiona con Ciudadano");
           personaA.recibirDanio(100, personaB);
           this.score += 100;
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         }
         if (personaA instanceof Ciudadano && personaB === this.protagonista) {
           console.log("Colisión detectada: Ciudadano toca al Asesino");
           personaA.recibirDanio(100, personaB);
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         } else if (personaB instanceof Ciudadano && personaA === this.protagonista) {
           console.log("Colisión detectada: Ciudadano toca al Asesino");
           personaB.recibirDanio(100, personaA);
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         }
         if (personaA instanceof Policia && personaB === this.protagonista) {
           console.log("Colisión detectada: Policía toca al Asesino");
           personaB.recibirDanio(10, personaA);
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         } else if (personaB instanceof Policia && personaA === this.protagonista) {
           console.log("Colisión detectada: Policía toca al Asesino");
           personaA.recibirDanio(10, personaB);
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         }
         if (personaA instanceof Ciudadano && personaB instanceof Policia) {
           personaA.cambiarRuta();
@@ -208,17 +214,23 @@ class Juego {
           personaA.cambiarRuta();
         }
       }
-      if (personaA && objetoB) {
+      if (personaA && (objetoB || (objB && !(objB instanceof Persona)))) {
         console.log("Colisión detectada: Persona colisiona con objeto inanimado");
         if (personaA instanceof Ciudadano || personaA instanceof Policia) {
           personaA.cambiarRuta();
         }
+        if (personaA === this.protagonista) {
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
+        }
       }
 
-      if (personaB && objetoA) {
+      if (personaB && (objetoA || (objA && !(objA instanceof Persona)))) {
         console.log("Colisión detectada: Persona colisiona con objeto inanimado");
         if (personaB instanceof Ciudadano || personaB instanceof Policia) {
           personaB.cambiarRuta();
+        }
+        if (personaB === this.protagonista) {
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         }
       }
 
@@ -227,12 +239,18 @@ class Juego {
         if (personaA instanceof Ciudadano || personaA instanceof Policia) {
           personaA.cambiarRuta();
         }
+        if (personaA === this.protagonista) {
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
+        }
       }
 
       if (personaB && (bodyA.label === "piso" || bodyA.label === "techo" || bodyA.label === "paredIzquierda" || bodyA.label === "paredDerecha")) {
         console.log("Colisión detectada: Persona colisiona con pared -", bodyA.label);
         if (personaB instanceof Ciudadano || personaB instanceof Policia) {
           personaB.cambiarRuta();
+        }
+        if (personaB === this.protagonista) {
+          Matter.Body.setVelocity(this.protagonista.body, { x: 0, y: 0 });
         }
       }
     }
@@ -250,10 +268,13 @@ class Juego {
     }
   }
   finDelJuego() {
+    if(!this.protagonista) return;
     if(this.protagonista.vida <= 0){
       alert("Te moriste! fin del juego. Tu puntaje final es: " + this.score);
       this.guardarMejorPuntaje(this.score);
+      return;
     }
+    this.ganaste();
   }
   ganaste() {
     const ciudadanosRestantes = this.personas.filter(p => p instanceof Ciudadano).length;
@@ -285,10 +306,10 @@ class Juego {
     for (let unpersona of this.personas) unpersona.tick();
     for (let unpersona of this.personas) unpersona.render();
     if (this.ui) this.ui.render();
+    this.finDelJuego();
     if (this.mostrarCollidersDebug) {
       this.dibujarCollidersDebug();
     }
-    this.ganaste();
     if (this.protagonista) {
       const offsetX = this.width / 4 - this.protagonista.posicion.x;
       const offsetY = this.height / 4 - this.protagonista.posicion.y;

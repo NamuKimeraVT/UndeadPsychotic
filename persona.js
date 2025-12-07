@@ -17,7 +17,7 @@ class Persona extends GameObject {
       this.posicion.y,
       this.ancho * 0.8,
       this.alto * 0.8,
-      { restitution: 0.1, friction: 0.1, frictionAir: 0.01 }
+      { restitution: 0, friction: 0.5, frictionAir: 0.02 }
     );
     this.body.angle = Math.random() * 3;
     this.body.gameObject = this;

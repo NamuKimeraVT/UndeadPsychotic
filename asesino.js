@@ -9,7 +9,8 @@ class Asesino extends Persona {
     this.container.label = "prota";
     juego.targetCamara = juego.protagonista;
     this.agregarEventListenersDelTeclado();
-    this.body.frictionAir = 0.05;
+    this.body.isMovable = false;
+    this.body.frictionAir = 0.15;
     this.assassinFSM = createFSM('idle', {
       'idle': {
         'moveUp': { target: 'movingUp', action: () => { this.cambiarAnimacion("caminarArriba") } },
