@@ -94,7 +94,7 @@ class Juego {
     this.crearSillas();
     this.crearPalmeras();
     this.crearAsesino();
-    this.crearCiudadanos(20);
+    this.crearCiudadanos(60);
     this.crearPolicias(10);
     this.ui = new UI(this);
   }

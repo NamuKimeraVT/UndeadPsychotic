@@ -11,6 +11,7 @@ class Asesino extends Persona {
     this.agregarEventListenersDelTeclado();
     this.body.isMovable = false;
     this.body.frictionAir = 0.15;
+    this.controlesOcultados = false;
     this.assassinFSM = createFSM('idle', {
       'idle': {
         'moveUp': { target: 'movingUp', action: () => { this.cambiarAnimacion("caminarArriba") } },
@@ -68,6 +69,10 @@ class Asesino extends Persona {
       direction = 'movingRight';
     }
     if (direction !== 'idle') {
+      if (!this.controlesOcultados && this.juego.ui) {
+        this.juego.ui.ocultarControles();
+        this.controlesOcultados = true;
+      }
       this.moverse(direction);
       try {
         if (direction === 'movingUp') {
