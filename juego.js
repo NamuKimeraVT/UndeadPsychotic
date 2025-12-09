@@ -270,7 +270,7 @@ class Juego {
   finDelJuego() {
     if(!this.protagonista) return;
     if(this.protagonista.vida <= 0){
-      alert("Te moriste! fin del juego. Tu puntaje final es: " + this.score);
+      alert("Te moriste! fin del juego. Reinicia para poder jugar otra vez. Tu puntaje final es: " + this.score);
       this.guardarMejorPuntaje(this.score);
       return;
     }
@@ -279,7 +279,7 @@ class Juego {
   ganaste() {
     const ciudadanosRestantes = this.personas.filter(p => p instanceof Ciudadano).length;
     if(ciudadanosRestantes === 0){
-      alert("Ganaste! mataste a todos los ciudadanos. Tu puntaje final es: " + this.score);
+      alert("Ganaste! mataste a todos los ciudadanos. Reinicia para poder jugar otra vez. Tu puntaje final es: " + this.score);
       this.guardarMejorPuntaje(this.score);
     }
   }
